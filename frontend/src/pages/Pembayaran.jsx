@@ -4,7 +4,7 @@ import { useTranslation } from '../context/LanguageContext.jsx';
 import api from '../api/client.js';
 import DashboardLayout from '../components/DashboardLayout.jsx';
 
-const BACKEND_URL = 'http://localhost:8000';
+const BACKEND_URL = 'https://tenagaahli.latihan.co.id';
 
 const getBANKACCOUNTS = (t) => [
   { bank: 'BCA',     norek: '1234567890', atas_nama: t('payment.account_name', 'TenagaAhli.com') },

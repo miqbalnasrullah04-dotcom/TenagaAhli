@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../context/LanguageContext.jsx';
-import tentangKamiImg from '../assets/tentangkami.jpg';
+import tentangKamiImg from '../assets/About-us-2.png';
 import NavbarBackground from '../components/NavbarBackground.jsx';
 
 export default function TentangKami() {

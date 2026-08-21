@@ -15,6 +15,16 @@ class Document extends Model
 
     public function getFileUrlAttribute()
     {
-        return $this->file_path ? asset('storage/'.$this->file_path) : null;
+        if (!$this->file_path) {
+            return null;
+        }
+
+        // Jika sudah URL lengkap, return as is
+        if (filter_var($this->file_path, FILTER_VALIDATE_URL)) {
+            return $this->file_path;
+        }
+
+        // Buat URL yang benar menggunakan route file view
+        return url("/api/files/{$this->file_path}");
     }
 }

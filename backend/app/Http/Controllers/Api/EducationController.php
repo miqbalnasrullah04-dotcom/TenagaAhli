@@ -24,11 +24,14 @@ class EducationController extends Controller
             'jenjang' => ['required', 'string', 'max:255'],
             'institusi' => ['required', 'string', 'max:255'],
             'jurusan' => ['nullable', 'string', 'max:255'],
-            'tahun_lulus' => ['nullable', 'integer', 'min:1950', 'max:'.(date('Y') + 1)],
+            'tahun_lulus' => ['nullable', 'integer', 'min:1950', 'max:'.(date('Y') + 10)],
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->first()], 422);
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         $data = $validator->validated();
@@ -48,11 +51,14 @@ class EducationController extends Controller
             'jenjang' => ['required', 'string', 'max:255'],
             'institusi' => ['required', 'string', 'max:255'],
             'jurusan' => ['nullable', 'string', 'max:255'],
-            'tahun_lulus' => ['nullable', 'integer', 'min:1950', 'max:'.(date('Y') + 1)],
+            'tahun_lulus' => ['nullable', 'integer', 'min:1950', 'max:'.(date('Y') + 10)],
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->first()], 422);
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         $education->update($validator->validated());

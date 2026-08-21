@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // API Configuration
-const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const baseURL = import.meta.env.VITE_API_URL || 'https://tenagaahli.latihan.co.id/api';
 
 // Create axios instance with base configuration
 const api = axios.create({

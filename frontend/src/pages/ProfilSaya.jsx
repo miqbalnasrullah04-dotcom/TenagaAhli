@@ -406,8 +406,10 @@ export default function ProfilSaya() {
   const getFileUrl = (filePath) => {
     if (!filePath) return '#';
     if (filePath.startsWith('http')) return filePath;
-    const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
-    return `${baseUrl}/storage/${filePath}`;
+    
+    // Gunakan route file view API instead of direct storage access
+    const apiUrl = import.meta.env.VITE_API_URL || 'https://tenagaahli.latihan.co.id/api';
+    return `${apiUrl}/files/${filePath}`;
   };
 
   // Sinkronkan data user (khususnya foto profil) yang baru saja diambil dari
@@ -867,21 +869,23 @@ export default function ProfilSaya() {
       });
 
       console.log('Upload response:', response.data);
+      
+      // If it's a profile photo, immediately update the preview with the new URL
+      if (type === 'foto_profil' && response.data.file_path) {
+        const newPhotoUrl = `${import.meta.env.VITE_API_URL || 'https://tenagaahli.latihan.co.id/api'}/files/${response.data.file_path}?t=${Date.now()}`;
+        setPreview(newPhotoUrl);
+        console.log('Setting new photo preview URL:', newPhotoUrl);
+      }
 
       flash('ok', t('profile.success.file_uploaded', '{label} berhasil diunggah.').replace('{label}', label));
 
       resetFn();
 
+      // Reload profile data to get latest info
       await load();
 
       window.dispatchEvent(new Event('amdal-user-updated'));
       console.log('[ProfilSaya] Event amdal-user-updated dispatched setelah upload foto');
-
-      if (type === 'foto_profil') {
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
-      }
     } catch (e) {
       flash('err', e.response?.data?.message || t('profile.error.upload_failed', 'Gagal mengunggah {label}.').replace('{label}', label));
     }

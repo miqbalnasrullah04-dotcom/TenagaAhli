@@ -13,11 +13,24 @@ export default function EducationSection({ items, onChange }) {
     setSaving(true);
     setError('');
     try {
-      const res = await api.post('/my/educations', form);
+      const formData = {
+        jenjang: form.jenjang,
+        institusi: form.institusi,
+        jurusan: form.jurusan || null,
+        tahun_lulus: form.tahun_lulus ? parseInt(form.tahun_lulus, 10) : null
+      };
+      const res = await api.post('/my/educations', formData);
       onChange([...items, res.data]);
       setForm(emptyForm);
     } catch (err) {
-      setError(err.response?.data?.message || 'Gagal menyimpan pendidikan.');
+      // Check if it's a validation error with multiple messages
+      if (err.response?.status === 422 && err.response?.data?.errors) {
+        const errors = err.response.data.errors;
+        const errorMessage = Object.values(errors).flat().join(', ');
+        setError(errorMessage);
+      } else {
+        setError(err.response?.data?.message || 'Gagal menyimpan pendidikan.');
+      }
     } finally {
       setSaving(false);
     }
@@ -64,14 +77,16 @@ export default function EducationSection({ items, onChange }) {
         >
           <option value="">Jenjang</option>
           <option value="SMA/SMK">SMA/SMK</option>
-          <option value="D3">D3</option>
-          <option value="S1">S1</option>
-          <option value="S2">S2</option>
-          <option value="S3">S3</option>
+          <option value="D3 · Diploma">D3 · Diploma</option>
+          <option value="S1 · Sarjana">S1 · Sarjana</option>
+          <option value="S2 · Magister">S2 · Magister</option>
+          <option value="S3 · Doktor">S3 · Doktor</option>
         </select>
         <input
           type="number"
           placeholder="Tahun lulus"
+          min="1950"
+          max={new Date().getFullYear() + 10}
           value={form.tahun_lulus}
           onChange={(e) => setForm({ ...form, tahun_lulus: e.target.value })}
           className="border border-outline-variant/40 rounded-lg px-3 py-2 text-sm focus:ring-[#2E5E3B] focus:border-[#2E5E3B]"

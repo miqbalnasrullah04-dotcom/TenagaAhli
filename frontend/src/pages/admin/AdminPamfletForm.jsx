@@ -26,7 +26,7 @@ export default function AdminPamfletForm() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
-  const BACKEND_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000';
+  const BACKEND_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://tenagaahli.latihan.co.id';
 
   useEffect(() => {
     if (!isEdit) return;

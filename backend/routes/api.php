@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AkademikController;
 use App\Http\Controllers\Api\ArticleApiController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryApiController;
@@ -90,6 +91,23 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/my/documents', [DocumentController::class, 'index']);
     Route::post('/my/documents', [DocumentController::class, 'store']);
     Route::delete('/my/documents/{id}', [DocumentController::class, 'destroy']);
+
+    // Academic data - publikasi, organisasi, reviewer jurnal, instruktur
+    Route::get('/my/publikasi', [AkademikController::class, 'indexPublikasi']);
+    Route::post('/my/publikasi', [AkademikController::class, 'storePublikasi']);
+    Route::delete('/my/publikasi/{id}', [AkademikController::class, 'destroyPublikasi']);
+
+    Route::get('/my/organisasi', [AkademikController::class, 'indexOrganisasi']);
+    Route::post('/my/organisasi', [AkademikController::class, 'storeOrganisasi']);
+    Route::delete('/my/organisasi/{id}', [AkademikController::class, 'destroyOrganisasi']);
+
+    Route::get('/my/reviewer-jurnal', [AkademikController::class, 'indexReviewerJurnal']);
+    Route::post('/my/reviewer-jurnal', [AkademikController::class, 'storeReviewerJurnal']);
+    Route::delete('/my/reviewer-jurnal/{id}', [AkademikController::class, 'destroyReviewerJurnal']);
+
+    Route::get('/my/instruktur', [AkademikController::class, 'indexInstruktur']);
+    Route::post('/my/instruktur', [AkademikController::class, 'storeInstruktur']);
+    Route::delete('/my/instruktur/{id}', [AkademikController::class, 'destroyInstruktur']);
 
     // File upload endpoint for profile images
     Route::post('/upload/profile-image', [FileController::class, 'uploadProfileImage']);

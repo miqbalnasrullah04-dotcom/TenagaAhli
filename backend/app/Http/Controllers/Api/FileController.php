@@ -10,7 +10,7 @@ class FileController extends Controller
 {
     /**
      * View or download a file from storage
-     * 
+     *
      * @param Request $request
      * @param string $path - The file path (e.g., "dokumen/filename.pdf")
      * @return \Illuminate\Http\Response
@@ -19,7 +19,7 @@ class FileController extends Controller
     {
         // Reconstruct full path from URL segments
         $fullPath = $path;
-        
+
         // Get additional segments if nested path
         if ($request->route()->parameters()) {
             $segments = array_slice($request->route()->parameters(), 1);
@@ -48,7 +48,7 @@ class FileController extends Controller
 
     /**
      * Upload photo/cover for expert profile
-     * 
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -61,20 +61,21 @@ class FileController extends Controller
 
         $type = $request->input('type');
         $folder = $type === 'photo' ? 'experts/photos' : 'experts/covers';
-        
+
         $path = $request->file('file')->store($folder, 'public');
 
         return response()->json([
             'success' => true,
             'path' => $path,
-            'url' => asset('storage/' . $path),
+            'url' => url("/api/files/{$path}"),
+            'storage_url' => asset('storage/' . $path), // Fallback URL for debugging
             'message' => ucfirst($type) . ' berhasil diupload'
         ]);
     }
 
     /**
      * Get file info
-     * 
+     *
      * @param Request $request
      * @param string $path
      * @return \Illuminate\Http\JsonResponse
@@ -82,7 +83,7 @@ class FileController extends Controller
     public function info(Request $request, $path)
     {
         $fullPath = $path;
-        
+
         if ($request->route()->parameters()) {
             $segments = array_slice($request->route()->parameters(), 1);
             if (!empty($segments)) {
@@ -112,7 +113,7 @@ class FileController extends Controller
 
     /**
      * Format bytes to human readable size
-     * 
+     *
      * @param int $bytes
      * @param int $precision
      * @return string

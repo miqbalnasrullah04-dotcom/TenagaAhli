@@ -42,7 +42,7 @@ export default function Navbar() {
     }
 
     // Jika masih path relatif, resolve dengan backend URL + cache buster
-    const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+    const baseUrl = import.meta.env.VITE_BACKEND_URL || 'https://tenagaahli.latihan.co.id';
     return `${baseUrl}/storage/${photoUrl}?t=${Date.now()}`;
   };
 

@@ -9,7 +9,7 @@ import { useTranslation } from '../context/LanguageContext.jsx';
 const getFileUrl = (filePath) => {
   if (!filePath) return '#';
   if (filePath.startsWith('http')) return filePath;
-  const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+  const baseUrl = import.meta.env.VITE_BACKEND_URL || 'https://tenagaahli.latihan.co.id';
   return `${baseUrl}/storage/${filePath}`;
 };
 
