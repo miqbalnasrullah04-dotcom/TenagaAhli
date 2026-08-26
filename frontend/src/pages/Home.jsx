@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from '../context/LanguageContext.jsx';
 import api from '../api/client.js';
-import Background from '../assets/world.jpg'; // ✅ tetap dipakai sebagai poster/fallback video
+import Background from '../assets/background5.jpeg'; // ✅ tetap dipakai sebagai poster/fallback video
 import ShinyText from '../components/ShinyText';
 import { usePageLoading } from '../context/LoadingContext.jsx';
 
