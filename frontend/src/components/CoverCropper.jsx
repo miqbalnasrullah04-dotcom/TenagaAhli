@@ -60,7 +60,7 @@ export default function CoverCropper({ imageSrc, onCropComplete, onCancel }) {
         <button
           onClick={createCroppedImage}
           disabled={loading}
-          className="bg-[#0EA5E9] hover:bg-[#0284C7] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+          className="bg-[#8B4513] hover:bg-[#6B3410] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
         >
           {loading ? t('cover_crop.processing', 'Memproses...') : t('cover_crop.done', 'Selesai')}
         </button>
@@ -83,7 +83,7 @@ export default function CoverCropper({ imageSrc, onCropComplete, onCancel }) {
               background: 'rgba(0,0,0,0.5)',
             },
             cropAreaStyle: {
-              border: '2px solid #0EA5E9',
+              border: '2px solid #8B4513',
             },
           }}
         />
@@ -99,7 +99,7 @@ export default function CoverCropper({ imageSrc, onCropComplete, onCancel }) {
           step="0.1"
           value={zoom}
           onChange={(e) => setZoom(parseFloat(e.target.value))}
-          className="flex-1 accent-[#0EA5E9] cursor-pointer"
+          className="flex-1 accent-[#8B4513] cursor-pointer"
         />
         <span className="material-symbols-outlined text-[20px]">zoom_in</span>
       </div>

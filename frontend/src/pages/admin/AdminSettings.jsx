@@ -72,7 +72,7 @@ export default function AdminSettings() {
   if (loading) {
     return (
       <div className="flex items-center gap-3 text-[#5B6660] p-8">
-        <span className="w-5 h-5 rounded-full border-2 border-[#0284C7]/30 border-t-[#0284C7] animate-spin" />
+        <span className="w-5 h-5 rounded-full border-2 border-[#8B4513]/30 border-t-[#8B4513] animate-spin" />
         Memuat pengaturan...
       </div>
     );
@@ -88,27 +88,27 @@ export default function AdminSettings() {
   return (
     <div className="space-y-6 max-w-2xl">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-[#0284C7]">Pengaturan</h2>
+        <h2 className="text-2xl font-bold text-[#8B4513]">Pengaturan</h2>
         <p className="text-[#414844]/80 text-sm mt-1">Kelola data profil admin, ubah kata sandi keamanan, dan kontrol sesi.</p>
       </div>
 
       {/* Profile Card */}
-      <div className="bg-white rounded-2xl border border-[#0284C7]/15 shadow-sm p-6 flex items-center gap-5">
-        <div className="w-20 h-20 rounded-full bg-[#0284C7] text-white flex items-center justify-center font-bold text-2xl shadow-sm shrink-0">
+      <div className="bg-white rounded-2xl border border-[#8B4513]/15 shadow-sm p-6 flex items-center gap-5">
+        <div className="w-20 h-20 rounded-full bg-[#8B4513] text-white flex items-center justify-center font-bold text-2xl shadow-sm shrink-0">
           {initials}
         </div>
         <div className="min-w-0">
-          <p className="text-lg font-bold text-[#0284C7] leading-tight truncate">{user?.name || 'Administrator'}</p>
+          <p className="text-lg font-bold text-[#8B4513] leading-tight truncate">{user?.name || 'Administrator'}</p>
           <p className="text-sm text-[#414844]/80 truncate mb-2">{user?.email || '-'}</p>
-          <span className="inline-block text-[10px] uppercase tracking-wider font-bold text-[#0284C7] bg-[#0284C7]/10 px-2.5 py-1 rounded-full">
+          <span className="inline-block text-[10px] uppercase tracking-wider font-bold text-[#8B4513] bg-[#8B4513]/10 px-2.5 py-1 rounded-full">
             {user?.role || 'admin'}
           </span>
         </div>
       </div>
 
       {/* Account Info Details */}
-      <div className="bg-white rounded-2xl border border-[#0284C7]/15 shadow-sm p-6 space-y-4">
-        <h3 className="text-sm font-bold text-[#0284C7] border-b border-black/5 pb-2">Informasi Akun</h3>
+      <div className="bg-white rounded-2xl border border-[#6B3410]/15 shadow-sm p-6 space-y-4">
+        <h3 className="text-sm font-bold text-[#6B3410] border-b border-black/5 pb-2">Informasi Akun</h3>
         <div className="space-y-3 text-sm">
           <div>
             <span className="text-xs text-[#414844]/60 block font-medium">Nama Administrator</span>
@@ -122,11 +122,11 @@ export default function AdminSettings() {
       </div>
 
       {/* Ubah Password */}
-      <div className="bg-white rounded-2xl border border-[#0284C7]/15 shadow-sm p-6 space-y-4">
-        <h3 className="text-sm font-bold text-[#0284C7] border-b border-black/5 pb-2">Ubah Kata Sandi</h3>
+      <div className="bg-white rounded-2xl border border-[#6B3410]/15 shadow-sm p-6 space-y-4">
+        <h3 className="text-sm font-bold text-[#6B3410] border-b border-black/5 pb-2">Ubah Kata Sandi</h3>
         
         {passwordError && <p className="bg-[#FFDAD6] text-[#93000A] text-xs rounded-lg p-3">{passwordError}</p>}
-        {passwordSuccess && <p className="bg-[#E0F2FE] text-[#0284C7] text-xs rounded-lg p-3 font-semibold">{passwordSuccess}</p>}
+        {passwordSuccess && <p className="bg-[#F5EBE1] text-[#6B3410] text-xs rounded-lg p-3 font-semibold">{passwordSuccess}</p>}
 
         <form onSubmit={handleChangePassword} className="space-y-4">
           <div>
@@ -136,7 +136,7 @@ export default function AdminSettings() {
               required
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full mt-1.5 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+              className="w-full mt-1.5 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
             />
           </div>
           <div>
@@ -147,7 +147,7 @@ export default function AdminSettings() {
               minLength={8}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full mt-1.5 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+              className="w-full mt-1.5 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
             />
           </div>
           <div>
@@ -158,14 +158,14 @@ export default function AdminSettings() {
               minLength={8}
               value={newPasswordConfirmation}
               onChange={(e) => setNewPasswordConfirmation(e.target.value)}
-              className="w-full mt-1.5 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+              className="w-full mt-1.5 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
             />
           </div>
 
           <button
             type="submit"
             disabled={passwordSaving}
-            className="bg-[#0284C7] text-white py-2.5 px-5 rounded-xl text-xs font-bold hover:bg-[#0369A1] disabled:opacity-60 transition-colors"
+            className="bg-[#6B3410] text-white py-2.5 px-5 rounded-xl text-xs font-bold hover:bg-[#55290A] disabled:opacity-60 transition-colors"
           >
             {passwordSaving ? 'Menyimpan...' : 'Perbarui Password'}
           </button>
@@ -173,8 +173,8 @@ export default function AdminSettings() {
       </div>
 
       {/* Sessions and Security */}
-      <div className="bg-white rounded-2xl border border-[#0284C7]/15 shadow-sm p-6 space-y-4">
-        <h3 className="text-sm font-bold text-[#0284C7] border-b border-black/5 pb-2">Keamanan & Sesi</h3>
+      <div className="bg-white rounded-2xl border border-[#6B3410]/15 shadow-sm p-6 space-y-4">
+        <h3 className="text-sm font-bold text-[#6B3410] border-b border-black/5 pb-2">Keamanan & Sesi</h3>
         <p className="text-xs text-[#414844]/80 leading-relaxed">
           Keluar dari sesi administrator saat ini pada browser ini.
         </p>

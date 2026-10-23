@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\TicketReplyNotification;
+use App\Mail\TicketStatusUpdated;
 use App\Models\Ticket;
 use App\Models\TicketReply;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class TicketController extends Controller
@@ -89,6 +92,20 @@ class TicketController extends Controller
             $ticket->update(['status' => 'diproses']);
         }
 
+        // Kirim email notifikasi ke pengguna yang membuat tiket
+        $ticket->loadMissing('user');
+        if ($ticket->user && $ticket->user->email) {
+            $adminUser = $request->user();
+            $frontendUrl = rtrim(config('app.frontend_url', config('app.url')), '/');
+            $ticketUrl = $frontendUrl . '/bantuan';
+
+            try {
+                Mail::to($ticket->user->email)->send(new TicketReplyNotification($ticket, $reply, $adminUser, 'user', $ticketUrl));
+            } catch (\Throwable $e) {
+                \Log::warning('Gagal kirim email TicketReplyNotification ke User: ' . $e->getMessage());
+            }
+        }
+
         return response()->json($reply, 201);
     }
 
@@ -122,6 +139,24 @@ class TicketController extends Controller
         $ticket->update($updateData);
 
         $ticket->load(['user:id,name,email', 'replies.user:id,name,email', 'closedBy:id,name,email']);
+
+        // Kirim email notifikasi jika status diubah (misal diselesaikan)
+        if ($ticket->user && $ticket->user->email) {
+            $frontendUrl = rtrim(config('app.frontend_url', config('app.url')), '/');
+            $ticketUrl = $frontendUrl . '/bantuan';
+            $statusLabels = [
+                'baru'     => 'Baru',
+                'diproses' => 'Sedang Diproses',
+                'selesai'  => 'Selesai (Ditutup)',
+            ];
+            $label = $statusLabels[$request->status] ?? ucfirst($request->status);
+
+            try {
+                Mail::to($ticket->user->email)->send(new TicketStatusUpdated($ticket, $ticket->user, $label, $ticketUrl));
+            } catch (\Throwable $e) {
+                \Log::warning('Gagal kirim email TicketStatusUpdated: ' . $e->getMessage());
+            }
+        }
 
         return response()->json($ticket);
     }

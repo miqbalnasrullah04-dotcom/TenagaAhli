@@ -49,16 +49,16 @@ export default function AdminCategoryForm() {
   return (
     <div>
       <div className="mb-6 flex items-center gap-3">
-        <button onClick={() => navigate('/admin/kategori')} className="text-[#414844]/60 hover:text-[#0284C7]">
+        <button onClick={() => navigate('/admin/kategori')} className="text-[#414844]/60 hover:text-[#6B3410]">
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
         <div>
-          <h2 className="text-2xl font-bold text-[#0284C7]">{isEdit ? 'Edit Kategori' : 'Tambah Kategori'}</h2>
+          <h2 className="text-2xl font-bold text-[#6B3410]">{isEdit ? 'Edit Kategori' : 'Tambah Kategori'}</h2>
           <p className="text-[#414844]/80 text-sm mt-1">Kelola kategori tenaga ahli/konten.</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-[#0284C7]/15 shadow-sm p-6 max-w-lg">
+      <div className="bg-white rounded-xl border border-[#6B3410]/15 shadow-sm p-6 max-w-lg">
         {error && <p className="bg-[#FFDAD6] text-[#93000A] text-sm rounded-lg p-3 mb-4">{error}</p>}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -68,7 +68,7 @@ export default function AdminCategoryForm() {
               required
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+              className="w-full mt-1 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
             />
           </div>
           <div>
@@ -76,7 +76,7 @@ export default function AdminCategoryForm() {
             <input
               value={form.icon}
               onChange={(e) => setForm({ ...form, icon: e.target.value })}
-              className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+              className="w-full mt-1 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
             />
           </div>
           <div>
@@ -85,14 +85,14 @@ export default function AdminCategoryForm() {
               type="number"
               value={form.order}
               onChange={(e) => setForm({ ...form, order: Number(e.target.value) })}
-              className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+              className="w-full mt-1 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
             />
           </div>
           <div className="flex gap-3 mt-2">
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 bg-[#0284C7] text-white py-3 rounded-lg text-sm font-bold hover:bg-[#0369A1] disabled:opacity-60"
+              className="flex-1 bg-[#6B3410] text-white py-3 rounded-lg text-sm font-bold hover:bg-[#55290A] disabled:opacity-60"
             >
               {saving ? 'Menyimpan...' : 'Simpan'}
             </button>

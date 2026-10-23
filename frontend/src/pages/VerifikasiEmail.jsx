@@ -120,14 +120,14 @@ export default function VerifikasiEmail() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-6 py-12">
       <div className="w-full max-w-md">
-        <Link to="/" className="font-headline-md text-xl font-bold text-[#0284C7] block mb-8 text-center">
-          TenagaAhli<span className="text-[#7DD3FC]">.com</span>
+        <Link to="/" className="font-headline-md text-xl font-bold text-[#6B3410] block mb-8 text-center">
+          TenagaAhli<span className="text-[#C89368]">.com</span>
         </Link>
 
         <div className="bg-white rounded-2xl border border-outline-variant/30 p-8 shadow-sm">
           {/* Icon */}
-          <div className="w-20 h-20 bg-[#E0F2FE] rounded-full flex items-center justify-center mx-auto mb-6">
-            <span className="material-symbols-outlined text-5xl text-[#0284C7]">mail</span>
+          <div className="w-20 h-20 bg-[#F5EBE1] rounded-full flex items-center justify-center mx-auto mb-6">
+            <span className="material-symbols-outlined text-5xl text-[#6B3410]">mail</span>
           </div>
 
           {/* Header */}
@@ -136,7 +136,7 @@ export default function VerifikasiEmail() {
           </h1>
           <p className="text-sm text-on-surface-variant text-center mb-6">
             {t('auth.verify_email_desc', 'Kami telah mengirim kode verifikasi 6 digit ke')}<br />
-            <strong className="text-[#0284C7]">{email}</strong>
+            <strong className="text-[#6B3410]">{email}</strong>
           </p>
 
           {/* Alert messages */}
@@ -149,7 +149,7 @@ export default function VerifikasiEmail() {
           )}
 
           {success && (
-            <div className="bg-[#E0F2FE] text-[#0369A1] text-sm rounded-lg px-4 py-3 mb-5 flex items-start gap-2">
+            <div className="bg-[#F5EBE1] text-[#55290A] text-sm rounded-lg px-4 py-3 mb-5 flex items-start gap-2">
               <span className="material-symbols-outlined text-[18px] mt-0.5 shrink-0">check_circle</span>
               {success}
             </div>
@@ -169,7 +169,7 @@ export default function VerifikasiEmail() {
                   onChange={(e) => handleOtpChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
                   onPaste={handlePaste}
-                  className="w-12 h-14 text-center text-2xl font-bold border-2 border-outline-variant/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]/30 focus:border-[#0EA5E9] transition-colors"
+                  className="w-12 h-14 text-center text-2xl font-bold border-2 border-outline-variant/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B4513]/30 focus:border-[#8B4513] transition-colors"
                   autoFocus={index === 0}
                 />
               ))}
@@ -178,7 +178,7 @@ export default function VerifikasiEmail() {
             <button
               type="submit"
               disabled={loading || otp.join('').length !== 6}
-              className="w-full bg-[#0EA5E9] text-white py-3 rounded-lg text-sm font-bold hover:bg-[#0284C7] active:scale-[0.99] transition-all disabled:opacity-60 disabled:active:scale-100 mb-4"
+              className="w-full bg-[#8B4513] text-white py-3 rounded-lg text-sm font-bold hover:bg-[#6B3410] active:scale-[0.99] transition-all disabled:opacity-60 disabled:active:scale-100 mb-4"
             >
               {loading ? t('Memuat...') : t('Verifikasi')}
             </button>
@@ -192,7 +192,7 @@ export default function VerifikasiEmail() {
                 type="button"
                 onClick={handleResendOTP}
                 disabled={resending || countdown > 0}
-                className="text-sm font-bold text-[#0284C7] hover:underline disabled:opacity-50 disabled:no-underline"
+                className="text-sm font-bold text-[#6B3410] hover:underline disabled:opacity-50 disabled:no-underline"
               >
                 {resending
                   ? 'Mengirim...'
@@ -216,7 +216,7 @@ export default function VerifikasiEmail() {
               { icon: 'schedule',    text: 'Tunggu <strong>1–2 menit</strong> — email bisa sedikit telat' },
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-2 text-xs text-on-surface-variant">
-                <span className="material-symbols-outlined text-[15px] text-[#0284C7] shrink-0 mt-0.5">{item.icon}</span>
+                <span className="material-symbols-outlined text-[15px] text-[#6B3410] shrink-0 mt-0.5">{item.icon}</span>
                 <p dangerouslySetInnerHTML={{ __html: item.text }} />
               </div>
             ))}
@@ -234,7 +234,7 @@ export default function VerifikasiEmail() {
         {/* Back to register */}
         <p className="text-center text-sm text-on-surface-variant mt-6">
           Salah email?{' '}
-          <Link to="/daftar" className="text-[#0284C7] font-bold hover:underline">
+          <Link to="/daftar" className="text-[#6B3410] font-bold hover:underline">
             Daftar ulang
           </Link>
         </p>

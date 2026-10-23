@@ -25,6 +25,9 @@ class DatabaseSeeder extends Seeder
         // Seed packages
         $this->call(PackageSeeder::class);
 
+        // Seed Top Up Point packages
+        $this->call(TopUpPackageSeeder::class);
+
         // Seed experts
         $this->call(ExpertSeeder::class);
 

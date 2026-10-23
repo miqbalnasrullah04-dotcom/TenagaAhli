@@ -22,19 +22,28 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'pending_email',
         'password',
         'role',
+        'role_type',
+        'is_also_expert',
         'otp_code',
         'otp_expires_at',
         'reset_token',
         'reset_token_expires_at',
         'email_verified_at',
+        'avatar_url',
+        'foto',
+        'phone',
         'total_points',
         'package',
         'premium_started_at',
         'premium_expires_at',
         'points',
         'membership_level',
+        'point_balance',
+        'last_seen_at',
+        'is_online',
     ];
 
     /**
@@ -60,8 +69,15 @@ class User extends Authenticatable
             'reset_token_expires_at' => 'datetime',
             'premium_started_at' => 'datetime',
             'premium_expires_at' => 'datetime',
+            'last_seen_at' => 'datetime',
+            'is_online' => 'boolean',
             'password' => 'hashed',
         ];
+    }
+
+    public function isOnline(): bool
+    {
+        return (bool) ($this->is_online && $this->last_seen_at && $this->last_seen_at->gt(now()->subMinutes(2)));
     }
 
     public function isAdmin(): bool
@@ -69,8 +85,51 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
+    public function isKlien(): bool
+    {
+        return $this->role_type === 'klien';
+    }
+
+    public function isTenagaAhli(): bool
+    {
+        return $this->role_type === 'tenaga_ahli' || $this->is_also_expert;
+    }
+
+    public function isSurveyor(): bool
+    {
+        return $this->role_type === 'surveyor';
+    }
+
+    public function isTenagaTeknis(): bool
+    {
+        return $this->role_type === 'tenaga_teknis';
+    }
+
+    public function getFotoAttribute($value)
+    {
+        return $this->expert?->photo ?? $value;
+    }
+
+    public function getAvatarUrlAttribute($value)
+    {
+        return $this->expert?->photo ?? $value;
+    }
+
+    public function getPhoneAttribute($value)
+    {
+        return $value ?: ($this->expert?->phone ?? null);
+    }
+
     /**
-     * Relasi ke PointHistory (legacy)
+     * Apakah user bisa mengakses dashboard (bukan klien murni)
+     */
+    public function hasDashboard(): bool
+    {
+        return in_array($this->role_type, ['tenaga_ahli', 'surveyor', 'tenaga_teknis']);
+    }
+
+    /**
+     * Relasi ke PointHistory (legacy — untuk leaderboard & profil aktivitas)
      */
     public function pointsHistory()
     {
@@ -78,7 +137,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Relasi ke PointTransaction
+     * Relasi ke PointTransaction (sistem Top Up Point baru)
      */
     public function pointTransactions()
     {
@@ -86,95 +145,103 @@ class User extends Authenticatable
     }
 
     /**
-     * Relasi ke MembershipTransaction
+     * Relasi ke MembershipTransaction (legacy)
      */
     public function membershipTransactions()
     {
         return $this->hasMany(MembershipTransaction::class);
     }
 
+    public function expert()
+    {
+        return $this->hasOne(Expert::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function advertisements()
+    {
+        return $this->hasMany(Advertisement::class);
+    }
+
+    // =========================================================================
+    // SISTEM TOP UP POINT — Saldo & Transaksi
+    // =========================================================================
+
     /**
-     * Check if user is currently premium
+     * Tambah saldo Point ke user.
+     * HARUS dipanggil dalam DB::transaction() di sisi caller.
+     * Setiap penambahan wajib punya record PointTransaction.
+     */
+    public function creditPoints(int $points, string $type, string $description, array $extra = []): PointTransaction
+    {
+        if ($points <= 0) {
+            throw new \InvalidArgumentException('Jumlah point harus lebih dari 0.');
+        }
+
+        $this->increment('point_balance', $points);
+
+        return $this->pointTransactions()->create(array_merge([
+            'type'        => $type,
+            'points'      => $points,
+            'description' => $description,
+            'status'      => 'success',
+        ], $extra));
+    }
+
+    /**
+     * Kurangi saldo Point dari user.
+     * Melempar exception jika saldo tidak mencukupi.
+     * HARUS dipanggil dalam DB::transaction() di sisi caller.
+     */
+    public function deductPoints(int $points, string $type, string $description, array $extra = []): PointTransaction
+    {
+        if ($points <= 0) {
+            throw new \InvalidArgumentException('Jumlah point harus lebih dari 0.');
+        }
+
+        $fresh = $this->fresh();
+        if ($fresh->point_balance < $points) {
+            throw new \Exception("Point tidak mencukupi. Saldo Anda: {$fresh->point_balance} Point, dibutuhkan: {$points} Point.");
+        }
+
+        $this->decrement('point_balance', $points);
+
+        return $this->pointTransactions()->create(array_merge([
+            'type'        => $type,
+            'points'      => -$points, // negatif = pengurangan
+            'description' => $description,
+            'status'      => 'success',
+        ], $extra));
+    }
+
+    /**
+     * Cek apakah saldo Point mencukupi.
+     */
+    public function hasEnoughPoints(int $points): bool
+    {
+        return $this->point_balance >= $points;
+    }
+
+    /**
+     * Ambil saldo Point saat ini (fresh dari DB).
+     */
+    public function getPointBalance(): int
+    {
+        return (int) $this->fresh()->point_balance;
+    }
+
+    /**
+     * Check if user is currently premium / platinum / ekonomis / eksklusif
      */
     public function isPremium(): bool
     {
-        return $this->package === 'premium' &&
+        return in_array($this->package, ['premium', 'platinum', 'ekonomis', 'eksklusif', 'ekslusif', 'esklusif']) &&
                $this->premium_expires_at &&
                $this->premium_expires_at->isFuture();
-    }
-
-    /**
-     * Calculate membership level based on points
-     */
-    public function calculateLevel(): string
-    {
-        if ($this->points >= 2000) {
-            return 'platinum';
-        } elseif ($this->points >= 1000) {
-            return 'gold';
-        } elseif ($this->points >= 500) {
-            return 'silver';
-        } else {
-            return 'basic';
-        }
-    }
-
-    /**
-     * Get discount percentage for premium renewal based on level
-     */
-    public function getDiscountPercentage(): int
-    {
-        return match($this->membership_level) {
-            'platinum' => 15,
-            'gold' => 10,
-            'silver' => 5,
-            'basic' => 0,
-            default => 0,
-        };
-    }
-
-    /**
-     * Get next level info
-     */
-    public function getNextLevelInfo(): array
-    {
-        $levels = [
-            'basic' => ['next' => 'silver', 'required_points' => 500],
-            'silver' => ['next' => 'gold', 'required_points' => 1000],
-            'gold' => ['next' => 'platinum', 'required_points' => 2000],
-            'platinum' => ['next' => null, 'required_points' => null],
-        ];
-
-        $currentLevel = $this->membership_level;
-        $nextLevel = $levels[$currentLevel] ?? null;
-
-        if (!$nextLevel || !$nextLevel['next']) {
-            return [
-                'next_level' => null,
-                'points_needed' => 0,
-                'progress_percentage' => 100,
-            ];
-        }
-
-        $pointsNeeded = $nextLevel['required_points'] - $this->points;
-
-        // Calculate progress percentage
-        $previousLevelPoints = match($currentLevel) {
-            'basic' => 0,
-            'silver' => 500,
-            'gold' => 1000,
-            default => 0,
-        };
-
-        $levelRange = $nextLevel['required_points'] - $previousLevelPoints;
-        $currentProgress = $this->points - $previousLevelPoints;
-        $progressPercentage = $levelRange > 0 ? min(100, ($currentProgress / $levelRange) * 100) : 0;
-
-        return [
-            'next_level' => $nextLevel['next'],
-            'points_needed' => max(0, $pointsNeeded),
-            'progress_percentage' => $progressPercentage,
-        ];
     }
 
     /**
@@ -190,60 +257,42 @@ class User extends Authenticatable
     }
 
     /**
-     * Update membership level based on current points
-     */
-    public function updateMembershipLevel(): void
-    {
-        $newLevel = $this->calculateLevel();
-        if ($this->membership_level !== $newLevel) {
-            $this->membership_level = $newLevel;
-            $this->saveQuietly(); // Use saveQuietly to avoid triggering events
-        }
-    }
-
-    /**
-     * Add points to user
+     * Add points to user (untuk sistem poin aktivitas profil).
      */
     public function addPoints(int $points, string $type, string $description): void
     {
         $this->increment('points', $points);
 
-        // Create point transaction
+        // Create point transaction dengan status eksplisit
         $this->pointTransactions()->create([
-            'type' => $type,
-            'points' => $points,
+            'type'        => $type,
+            'points'      => $points,
             'description' => $description,
+            'status'      => 'success',
         ]);
-
-        // Update membership level
-        $this->updateMembershipLevel();
     }
 
     /**
-     * Get level badge color
+     * Get level badge color based on subscription package
      */
     public function getLevelBadgeColor(): string
     {
-        return match($this->membership_level) {
-            'platinum' => '#8B5CF6', // Purple
-            'gold' => '#F59E0B', // Gold
-            'silver' => '#6B7280', // Silver
-            'basic' => '#9CA3AF', // Gray
-            default => '#9CA3AF',
+        return match($this->package) {
+            'platinum', 'eksklusif', 'ekslusif', 'esklusif' => '#8B5CF6', // Purple/Platinum
+            'premium', 'ekonomis'                           => '#F59E0B', // Gold/Amber
+            default                                         => '#6B7280', // Gray
         };
     }
 
     /**
-     * Get level display name
+     * Get level display name based on subscription package
      */
     public function getLevelDisplayName(): string
     {
-        return match($this->membership_level) {
-            'platinum' => 'Platinum',
-            'gold' => 'Gold',
-            'silver' => 'Silver',
-            'basic' => 'Basic',
-            default => 'Basic',
+        return match($this->package) {
+            'platinum', 'eksklusif', 'ekslusif', 'esklusif' => 'Paket Eksklusif',
+            'premium', 'ekonomis'                           => 'Paket Ekonomis',
+            default                                         => 'Paket Free',
         };
     }
 }

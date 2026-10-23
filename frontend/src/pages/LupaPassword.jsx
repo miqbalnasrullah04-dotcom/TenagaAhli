@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from '../context/LanguageContext.jsx';
 import api from '../api/client.js';
-import logo from '../assets/tenaga ahli 2.png';
+import logo from '../assets/new logo.png';
 
 export default function LupaPassword() {
   const { t } = useTranslation();
@@ -76,7 +76,7 @@ export default function LupaPassword() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#E0F2FE] via-white to-[#F0F9FF] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#F5EBE1] via-white to-[#FAF5F0] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -116,21 +116,21 @@ export default function LupaPassword() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="nama@email.com"
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1479D6] focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B4513] focus:border-transparent"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-[#1479D6] text-white py-3 rounded-lg font-semibold hover:bg-[#0F63B0] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-[#8B4513] text-white py-3 rounded-lg font-semibold hover:bg-[#0F63B0] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? t('Mengirim...') : t('Kirim Kode Verifikasi')}
                 </button>
               </form>
 
               <div className="mt-6 text-center">
-                <Link to="/sign-in" className="text-sm text-[#1479D6] hover:underline">
+                <Link to="/sign-in" className="text-sm text-[#8B4513] hover:underline">
                   {t('Kembali ke Login')}
                 </Link>
               </div>
@@ -162,7 +162,7 @@ export default function LupaPassword() {
                     placeholder="000000"
                     maxLength={6}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-center text-2xl font-mono tracking-widest focus:ring-2 focus:ring-[#1479D6] focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-center text-2xl font-mono tracking-widest focus:ring-2 focus:ring-[#8B4513] focus:border-transparent"
                   />
                 </div>
 
@@ -176,7 +176,7 @@ export default function LupaPassword() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Minimal 8 karakter"
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1479D6] focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B4513] focus:border-transparent"
                   />
                 </div>
 
@@ -190,14 +190,14 @@ export default function LupaPassword() {
                     onChange={(e) => setPasswordConfirmation(e.target.value)}
                     placeholder="Ketik ulang password"
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1479D6] focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B4513] focus:border-transparent"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-[#1479D6] text-white py-3 rounded-lg font-semibold hover:bg-[#0F63B0] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-[#8B4513] text-white py-3 rounded-lg font-semibold hover:bg-[#0F63B0] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? t('Memproses...') : t('Reset Password')}
                 </button>
@@ -206,7 +206,7 @@ export default function LupaPassword() {
               <div className="mt-6 text-center">
                 <button
                   onClick={() => setStep(1)}
-                  className="text-sm text-[#1479D6] hover:underline"
+                  className="text-sm text-[#8B4513] hover:underline"
                 >
                   {t('Kirim ulang kode')}
                 </button>
@@ -226,7 +226,7 @@ export default function LupaPassword() {
                 </p>
                 <Link
                   to="/sign-in"
-                  className="inline-block bg-[#1479D6] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#0F63B0] transition-colors"
+                  className="inline-block bg-[#8B4513] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#0F63B0] transition-colors"
                 >
                   {t('Login Sekarang')}
                 </Link>

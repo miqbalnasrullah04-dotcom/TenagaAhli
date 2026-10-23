@@ -10,7 +10,7 @@ const PRIORITIES = {
 };
 
 const STATUS_MAP = {
-  baru: { label: 'Baru', color: '#0284C7', bg: '#E0F2FE', icon: 'fiber_new' },
+  baru: { label: 'Baru', color: '#6B3410', bg: '#F5EBE1', icon: 'fiber_new' },
   diproses: { label: 'Diproses', color: '#7A5900', bg: '#FFF4D6', icon: 'pending' },
   selesai: { label: 'Selesai', color: '#2E5E3B', bg: '#E3F2E7', icon: 'check_circle' },
 };
@@ -139,12 +139,12 @@ export default function AdminTickets() {
       <div>
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-[#0284C7]">Detail Tiket</h2>
+            <h2 className="text-2xl font-bold text-[#6B3410]">Detail Tiket</h2>
             <p className="text-[#414844]/80 text-sm mt-1">{selectedTicket.ticket_number}</p>
           </div>
           <button
             onClick={() => setSelectedTicket(null)}
-            className="px-4 py-2 bg-[#0284C7]/10 hover:bg-[#0284C7]/20 text-[#0284C7] text-sm font-bold rounded-lg transition-all flex items-center gap-1"
+            className="px-4 py-2 bg-[#6B3410]/10 hover:bg-[#6B3410]/20 text-[#6B3410] text-sm font-bold rounded-lg transition-all flex items-center gap-1"
           >
             <span className="material-symbols-outlined text-[16px]">arrow_back</span>
             Kembali
@@ -153,7 +153,7 @@ export default function AdminTickets() {
 
         <div className="space-y-5">
           {/* Ticket Info */}
-          <div className="bg-white rounded-xl border border-[#0284C7]/15 shadow-sm p-6">
+          <div className="bg-white rounded-xl border border-[#6B3410]/15 shadow-sm p-6">
             <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-5">
               <div className="flex-1">
                 <h3 className="text-lg font-bold text-[#1F2A22] mb-2">{selectedTicket.title}</h3>
@@ -180,7 +180,7 @@ export default function AdminTickets() {
                   <button
                     onClick={() => handleStatusChange('baru')}
                     disabled={changingStatus}
-                    className="px-3 py-2 bg-[#0284C7]/10 hover:bg-[#0284C7]/20 text-[#0284C7] text-xs font-bold rounded-lg transition-all disabled:opacity-50"
+                    className="px-3 py-2 bg-[#6B3410]/10 hover:bg-[#6B3410]/20 text-[#6B3410] text-xs font-bold rounded-lg transition-all disabled:opacity-50"
                   >
                     Set Baru
                   </button>
@@ -235,8 +235,8 @@ export default function AdminTickets() {
           </div>
 
           {/* Replies */}
-          <div className="bg-white rounded-xl border border-[#0284C7]/15 shadow-sm p-6">
-            <h3 className="flex items-center gap-2 text-sm font-bold text-[#0284C7] uppercase tracking-wider mb-5">
+          <div className="bg-white rounded-xl border border-[#6B3410]/15 shadow-sm p-6">
+            <h3 className="flex items-center gap-2 text-sm font-bold text-[#6B3410] uppercase tracking-wider mb-5">
               <span className="material-symbols-outlined text-[18px]">forum</span>
               Percakapan
             </h3>
@@ -248,14 +248,14 @@ export default function AdminTickets() {
                     key={reply.id}
                     className={`rounded-xl p-4 border ${
                       reply.is_admin
-                        ? 'bg-[#E0F2FE] border-[#0284C7]/20'
+                        ? 'bg-[#F5EBE1] border-[#6B3410]/20'
                         : 'bg-[#F5F4EF] border-black/5'
                     }`}
                   >
                     <div className="flex items-center gap-2 mb-2">
                       <div
                         className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white ${
-                          reply.is_admin ? 'bg-[#0284C7]' : 'bg-[#2E5E3B]'
+                          reply.is_admin ? 'bg-[#6B3410]' : 'bg-[#2E5E3B]'
                         }`}
                       >
                         {reply.is_admin ? 'A' : 'U'}
@@ -273,7 +273,7 @@ export default function AdminTickets() {
               </div>
             ) : (
               <div className="text-center py-8 mb-6">
-                <span className="material-symbols-outlined text-[40px] text-[#0284C7]/20 mb-2 block">forum</span>
+                <span className="material-symbols-outlined text-[40px] text-[#6B3410]/20 mb-2 block">forum</span>
                 <p className="text-sm text-[#414844]/60">Belum ada balasan.</p>
               </div>
             )}
@@ -288,13 +288,13 @@ export default function AdminTickets() {
                   required
                   rows={3}
                   placeholder="Tulis balasan Anda..."
-                  className="w-full rounded-xl border border-black/10 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#0284C7]/30 focus:border-[#0284C7] transition-all resize-none"
+                  className="w-full rounded-xl border border-black/10 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#6B3410]/30 focus:border-[#6B3410] transition-all resize-none"
                 />
                 <div className="flex justify-end">
                   <button
                     type="submit"
                     disabled={sendingReply || !replyMessage.trim()}
-                    className="bg-[#0284C7] text-white text-sm font-bold px-6 py-2.5 rounded-xl hover:bg-[#0369A1] disabled:opacity-50 transition-all shadow-md shadow-[#0284C7]/15 flex items-center gap-2"
+                    className="bg-[#6B3410] text-white text-sm font-bold px-6 py-2.5 rounded-xl hover:bg-[#55290A] disabled:opacity-50 transition-all shadow-md shadow-[#6B3410]/15 flex items-center gap-2"
                   >
                     {sendingReply ? (
                       <>
@@ -321,26 +321,26 @@ export default function AdminTickets() {
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-[#0284C7]">Manajemen Tiket</h2>
+        <h2 className="text-2xl font-bold text-[#6B3410]">Manajemen Tiket</h2>
         <p className="text-[#414844]/80 text-sm mt-1">Kelola dan tanggapi tiket bantuan dari pengguna.</p>
       </div>
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-gradient-to-br from-[#0284C7]/10 to-[#0284C7]/5 rounded-xl p-4 border border-[#0284C7]/20">
+        <div className="bg-gradient-to-br from-[#6B3410]/10 to-[#6B3410]/5 rounded-xl p-4 border border-[#6B3410]/20">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-[#414844]/70">Total Tiket</span>
-            <span className="material-symbols-outlined text-[#0284C7] text-[20px]">confirmation_number</span>
+            <span className="material-symbols-outlined text-[#6B3410] text-[20px]">confirmation_number</span>
           </div>
-          <p className="text-2xl font-bold text-[#0284C7]">{stats.total}</p>
+          <p className="text-2xl font-bold text-[#6B3410]">{stats.total}</p>
         </div>
 
-        <div className="bg-gradient-to-br from-[#0284C7]/10 to-[#0284C7]/5 rounded-xl p-4 border border-[#0284C7]/20">
+        <div className="bg-gradient-to-br from-[#6B3410]/10 to-[#6B3410]/5 rounded-xl p-4 border border-[#6B3410]/20">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-[#414844]/70">Baru</span>
-            <span className="material-symbols-outlined text-[#0284C7] text-[20px]">fiber_new</span>
+            <span className="material-symbols-outlined text-[#6B3410] text-[20px]">fiber_new</span>
           </div>
-          <p className="text-2xl font-bold text-[#0284C7]">{stats.baru}</p>
+          <p className="text-2xl font-bold text-[#6B3410]">{stats.baru}</p>
         </div>
 
         <div className="bg-gradient-to-br from-[#7A5900]/10 to-[#7A5900]/5 rounded-xl p-4 border border-[#7A5900]/20">
@@ -364,9 +364,9 @@ export default function AdminTickets() {
         <div className="mb-4 bg-[#FFDAD6] text-[#93000A] text-sm rounded-lg p-3">{error}</div>
       )}
 
-      <div className="bg-white rounded-xl border border-[#0284C7]/15 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-xl border border-[#6B3410]/15 shadow-sm overflow-hidden">
         {/* Search Bar */}
-        <div className="p-5 border-b border-[#0284C7]/15">
+        <div className="p-5 border-b border-[#6B3410]/15">
           <div className="relative">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#414844]/40 text-[20px]">
               search
@@ -376,12 +376,12 @@ export default function AdminTickets() {
               placeholder="Cari nomor tiket, judul, nama user, email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border border-[#0284C7]/20 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0284C7]/30 focus:border-[#0284C7] transition-all"
+              className="w-full pl-10 pr-4 py-2.5 border border-[#6B3410]/20 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6B3410]/30 focus:border-[#6B3410] transition-all"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#414844]/40 hover:text-[#0284C7] transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#414844]/40 hover:text-[#6B3410] transition-colors"
               >
                 <span className="material-symbols-outlined text-[18px]">close</span>
               </button>
@@ -395,7 +395,7 @@ export default function AdminTickets() {
         </div>
 
         {/* Filter Tabs */}
-        <div className="p-5 border-b border-[#0284C7]/15 flex gap-2 overflow-x-auto">
+        <div className="p-5 border-b border-[#6B3410]/15 flex gap-2 overflow-x-auto">
           {[
             { id: 'all', label: 'Semua' },
             { id: 'baru', label: 'Baru' },
@@ -407,8 +407,8 @@ export default function AdminTickets() {
               onClick={() => setSearchParams({ status: tab.id })}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
                 statusFilter === tab.id
-                  ? 'bg-[#0284C7] text-white shadow-sm'
-                  : 'bg-[#0284C7]/5 text-[#414844] hover:bg-[#0284C7]/10'
+                  ? 'bg-[#6B3410] text-white shadow-sm'
+                  : 'bg-[#6B3410]/5 text-[#414844] hover:bg-[#6B3410]/10'
               }`}
             >
               {tab.label}
@@ -420,7 +420,7 @@ export default function AdminTickets() {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="bg-[#0284C7]/5 text-[#414844] text-xs font-semibold">
+              <tr className="bg-[#6B3410]/5 text-[#414844] text-xs font-semibold">
                 <th className="px-6 py-3 whitespace-nowrap">No. Tiket</th>
                 <th className="px-6 py-3 whitespace-nowrap">User</th>
                 <th className="px-6 py-3 whitespace-nowrap">Judul & Kategori</th>
@@ -431,12 +431,12 @@ export default function AdminTickets() {
                 <th className="px-6 py-3 whitespace-nowrap text-center">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#0284C7]/10">
+            <tbody className="divide-y divide-[#6B3410]/10">
               {loading ? (
                 <tr>
                   <td colSpan={8} className="px-6 py-12 text-center">
                     <div className="flex flex-col items-center gap-3">
-                      <div className="animate-spin rounded-full h-10 w-10 border-4 border-[#0284C7]/20 border-t-[#0284C7]"></div>
+                      <div className="animate-spin rounded-full h-10 w-10 border-4 border-[#6B3410]/20 border-t-[#6B3410]"></div>
                       <p className="text-sm text-[#414844]/70">Memuat data tiket...</p>
                     </div>
                   </td>
@@ -457,17 +457,17 @@ export default function AdminTickets() {
                   const s = STATUS_MAP[ticket.status];
                   const p = PRIORITIES[ticket.priority];
                   return (
-                    <tr key={ticket.id} className="hover:bg-[#0284C7]/5 transition-colors">
+                    <tr key={ticket.id} className="hover:bg-[#6B3410]/5 transition-colors">
                       <td className="px-6 py-4">
                         <span className="font-mono text-xs bg-[#F5F4F0] px-2 py-1 rounded">{ticket.ticket_number}</span>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-full bg-[#0284C7]/10 flex items-center justify-center text-[#0284C7] font-bold text-xs">
+                          <div className="w-8 h-8 rounded-full bg-[#6B3410]/10 flex items-center justify-center text-[#6B3410] font-bold text-xs">
                             {ticket.user?.name?.charAt(0).toUpperCase() || 'U'}
                           </div>
                           <div>
-                            <p className="font-semibold text-[#0284C7] text-sm">{ticket.user?.name}</p>
+                            <p className="font-semibold text-[#6B3410] text-sm">{ticket.user?.name}</p>
                             <p className="text-xs text-[#414844]/60">{ticket.user?.email}</p>
                           </div>
                         </div>
@@ -504,7 +504,7 @@ export default function AdminTickets() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-center">
-                        <span className="inline-flex items-center gap-1 text-xs font-bold text-[#0284C7]">
+                        <span className="inline-flex items-center gap-1 text-xs font-bold text-[#6B3410]">
                           <span className="material-symbols-outlined text-[14px]">forum</span>
                           {ticket.replies?.length || 0}
                         </span>
@@ -512,7 +512,7 @@ export default function AdminTickets() {
                       <td className="px-6 py-4 text-center">
                         <button
                           onClick={() => setSelectedTicket(ticket)}
-                          className="bg-[#0284C7]/10 hover:bg-[#0284C7]/20 text-[#0284C7] px-3 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1 mx-auto"
+                          className="bg-[#6B3410]/10 hover:bg-[#6B3410]/20 text-[#6B3410] px-3 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1 mx-auto"
                         >
                           <span className="material-symbols-outlined text-[16px]">visibility</span>
                           Lihat

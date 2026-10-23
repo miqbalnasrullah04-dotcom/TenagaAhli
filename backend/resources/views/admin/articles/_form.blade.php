@@ -9,6 +9,14 @@
 </div>
 
 <div>
+    <label class="block text-xs font-semibold uppercase tracking-wide text-[#6B4F3A] mb-1.5">Sumber</label>
+    <input type="text" name="source" value="{{ old('source', $a->source ?? '') }}"
+           class="w-full rounded-lg border border-[#3E2B1F]/20 px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#2E5E3B]/40 focus:border-[#2E5E3B] outline-none"
+           placeholder="Sumber berita atau informasi proyek (misal: Kompas, KemenPUPR, dll)">
+    @error('source') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
+</div>
+
+<div>
     <label class="block text-xs font-semibold uppercase tracking-wide text-[#6B4F3A] mb-1.5">Ringkasan Singkat</label>
     <textarea name="excerpt" rows="2"
               class="w-full rounded-lg border border-[#3E2B1F]/20 px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#2E5E3B]/40 focus:border-[#2E5E3B] outline-none">{{ old('excerpt', $a->excerpt ?? '') }}</textarea>

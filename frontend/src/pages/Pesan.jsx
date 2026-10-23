@@ -28,7 +28,7 @@ const getDEMOCONVERSATIONS = (t) => [
     id: 1,
     nama: 'PT Bangun Nusantara',
     avatar: 'B',
-    avatarColor: '#0284C7',
+    avatarColor: '#6B3410',
     unread: 2,
     lastMessage: t('message.demo.last_message_1', 'Baik pak, kami tunggu revisi dokumen AMDAL-nya ya.'),
     lastTime: new Date(Date.now() - 30 * 60000).toISOString(),
@@ -122,12 +122,12 @@ export default function Pesan() {
                     placeholder={t('Cari percakapan...')}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2.5 text-sm border border-black/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0284C7]/20 focus:border-[#0284C7] transition-all"
+                    className="w-full pl-9 pr-3 py-2.5 text-sm border border-black/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6B3410]/20 focus:border-[#6B3410] transition-all"
                   />
                 </div>
                 {totalUnread > 0 && (
-                  <p className="text-[10px] text-[#0284C7] font-bold mt-2 flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-[#0284C7] animate-pulse" />
+                  <p className="text-[10px] text-[#6B3410] font-bold mt-2 flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-[#6B3410] animate-pulse" />
                     {totalUnread} {t('pesan belum dibaca')}
                   </p>
                 )}
@@ -137,7 +137,7 @@ export default function Pesan() {
               <div className="flex-1 overflow-y-auto">
                 {filteredConvos.length === 0 ? (
                   <div className="p-8 text-center">
-                    <span className="material-symbols-outlined text-[40px] text-[#0284C7]/20 mb-2 block">
+                    <span className="material-symbols-outlined text-[40px] text-[#6B3410]/20 mb-2 block">
                       chat_bubble_outline
                     </span>
                     <span className="text-sm text-[#414844]/60">{t('Tidak ada percakapan ditemukan')}</span>
@@ -149,7 +149,7 @@ export default function Pesan() {
                       onClick={() => setSelectedConvo(convo)}
                       className={`w-full text-left px-4 py-3.5 flex items-start gap-3 border-b border-black/3 transition-colors ${
                         selectedConvo?.id === convo.id
-                          ? 'bg-[#0284C7]/5 border-l-3 border-l-[#0284C7]'
+                          ? 'bg-[#6B3410]/5 border-l-3 border-l-[#6B3410]'
                           : 'hover:bg-black/2'
                       }`}
                     >
@@ -169,7 +169,7 @@ export default function Pesan() {
                         <div className="flex items-center justify-between gap-2 mt-0.5">
                           <p className="text-xs text-[#414844]/60 truncate">{convo.lastMessage}</p>
                           {convo.unread > 0 && (
-                            <span className="bg-[#0284C7] text-white text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">
+                            <span className="bg-[#6B3410] text-white text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">
                               {convo.unread}
                             </span>
                           )}
@@ -188,7 +188,7 @@ export default function Pesan() {
                 <div className="flex items-center gap-3 px-5 py-3.5 border-b border-black/5 bg-white">
                   <button
                     onClick={() => setSelectedConvo(null)}
-                    className="sm:hidden p-1 text-[#414844]/60 hover:text-[#0284C7]"
+                    className="sm:hidden p-1 text-[#414844]/60 hover:text-[#6B3410]"
                   >
                     <span className="material-symbols-outlined text-[20px]">arrow_back</span>
                   </button>
@@ -216,7 +216,7 @@ export default function Pesan() {
                       <div
                         className={`max-w-[75%] rounded-2xl px-4 py-3 ${
                           msg.dari === 'saya'
-                            ? 'bg-[#0284C7] text-white rounded-br-md'
+                            ? 'bg-[#6B3410] text-white rounded-br-md'
                             : msg.dari === 'admin'
                             ? 'bg-[#E3F2E7] text-[#1F2A22] rounded-bl-md'
                             : 'bg-white text-[#1F2A22] border border-black/5 rounded-bl-md shadow-sm'
@@ -243,12 +243,12 @@ export default function Pesan() {
                       placeholder={t('Ketik pesan...')}
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
-                      className="flex-1 border border-black/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#0284C7]/20 focus:border-[#0284C7] transition-all"
+                      className="flex-1 border border-black/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6B3410]/20 focus:border-[#6B3410] transition-all"
                     />
                     <button
                       type="submit"
                       disabled={!newMessage.trim()}
-                      className="bg-[#0284C7] text-white p-2.5 rounded-xl hover:bg-[#0369A1] disabled:opacity-40 transition-all shadow-sm"
+                      className="bg-[#6B3410] text-white p-2.5 rounded-xl hover:bg-[#55290A] disabled:opacity-40 transition-all shadow-sm"
                     >
                       <span className="material-symbols-outlined text-[20px]">send</span>
                     </button>
@@ -258,7 +258,7 @@ export default function Pesan() {
             ) : (
               /* No conversation selected */
               <div className="flex-1 hidden sm:flex flex-col items-center justify-center text-center px-8">
-                <span className="material-symbols-outlined text-[72px] text-[#0284C7]/15 mb-4">chat</span>
+                <span className="material-symbols-outlined text-[72px] text-[#6B3410]/15 mb-4">chat</span>
                 <h3 className="text-lg font-bold text-[#1F2A22] mb-2">{t('Pilih percakapan')}</h3>
                 <p className="text-sm text-[#414844]/60 max-w-xs">
                   {t('Pilih percakapan dari daftar di samping atau mulai percakapan baru untuk berkomunikasi dengan klien dan admin.')}

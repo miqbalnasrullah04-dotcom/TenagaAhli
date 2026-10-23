@@ -68,6 +68,7 @@ class ArticleController extends Controller
     {
         return $request->validate([
             'title'        => 'required|string|max:255',
+            'source'       => 'nullable|string|max:255',
             'excerpt'      => 'nullable|string|max:500',
             'content'      => 'nullable|string',
             'published_at' => 'nullable|date',

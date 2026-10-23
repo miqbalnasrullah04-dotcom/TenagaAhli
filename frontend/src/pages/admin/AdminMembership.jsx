@@ -19,7 +19,7 @@ function Badge({ level, color, className = '' }) {
 
 function StatusBadge({ status, className = '' }) {
   const colors = {
-    premium: 'bg-[#0284C7] text-white',
+    premium: 'bg-[#6B3410] text-white',
     free: 'bg-[#6B7280] text-white',
     expired: 'bg-[#B3261E] text-white',
   };
@@ -153,7 +153,7 @@ export default function AdminMembership() {
   if (loading && !statistics) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-10 w-10 border-4 border-[#0284C7]/20 border-t-[#0284C7]"></div>
+        <div className="animate-spin rounded-full h-10 w-10 border-4 border-[#6B3410]/20 border-t-[#6B3410]"></div>
       </div>
     );
   }
@@ -169,7 +169,7 @@ export default function AdminMembership() {
                 <p className="text-xs text-[#414844]/60 font-bold uppercase tracking-wider">Total Users</p>
                 <p className="text-2xl font-black text-[#1F2A22]">{statistics.total_users}</p>
               </div>
-              <span className="material-symbols-outlined text-[32px] text-[#0284C7]/20">people</span>
+              <span className="material-symbols-outlined text-[32px] text-[#6B3410]/20">people</span>
             </div>
           </Card>
 
@@ -177,10 +177,10 @@ export default function AdminMembership() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-[#414844]/60 font-bold uppercase tracking-wider">Premium Users</p>
-                <p className="text-2xl font-black text-[#0284C7]">{statistics.premium_users}</p>
+                <p className="text-2xl font-black text-[#6B3410]">{statistics.premium_users}</p>
                 <p className="text-xs text-[#414844]/60">Aktif</p>
               </div>
-              <span className="material-symbols-outlined text-[32px] text-[#0284C7]/20">star</span>
+              <span className="material-symbols-outlined text-[32px] text-[#6B3410]/20">star</span>
             </div>
           </Card>
 
@@ -253,7 +253,7 @@ export default function AdminMembership() {
                 onClick={() => handleTabChange(tab.key)}
                 className={`flex items-center gap-2 px-6 py-4 text-sm font-bold border-b-2 transition-all ${
                   activeTab === tab.key
-                    ? 'border-[#0284C7] text-[#0284C7] bg-[#0284C7]/5'
+                    ? 'border-[#6B3410] text-[#6B3410] bg-[#6B3410]/5'
                     : 'border-transparent text-[#414844]/60 hover:text-[#414844] hover:bg-black/2'
                 }`}
               >
@@ -267,7 +267,7 @@ export default function AdminMembership() {
         <div className="p-6">
           {activeTab === 'overview' && (
             <div className="text-center py-8">
-              <span className="material-symbols-outlined text-[56px] text-[#0284C7]/20 mb-3 block">insights</span>
+              <span className="material-symbols-outlined text-[56px] text-[#6B3410]/20 mb-3 block">insights</span>
               <h3 className="text-base font-bold text-[#1F2A22] mb-2">Statistik Membership & Point</h3>
               <p className="text-sm text-[#414844]/60">Pilih tab di atas untuk melihat detail data users, point history, atau transaksi</p>
             </div>
@@ -281,12 +281,12 @@ export default function AdminMembership() {
                   placeholder="Cari nama atau email..."
                   value={userFilters.search}
                   onChange={(e) => setUserFilters(prev => ({ ...prev, search: e.target.value }))}
-                  className="flex-1 min-w-[200px] rounded-lg border border-black/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0284C7]/30"
+                  className="flex-1 min-w-[200px] rounded-lg border border-black/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6B3410]/30"
                 />
                 <select
                   value={userFilters.package}
                   onChange={(e) => setUserFilters(prev => ({ ...prev, package: e.target.value }))}
-                  className="rounded-lg border border-black/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0284C7]/30"
+                  className="rounded-lg border border-black/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6B3410]/30"
                 >
                   <option value="">Semua Paket</option>
                   <option value="free">Free</option>
@@ -296,7 +296,7 @@ export default function AdminMembership() {
                 <select
                   value={userFilters.level}
                   onChange={(e) => setUserFilters(prev => ({ ...prev, level: e.target.value }))}
-                  className="rounded-lg border border-black/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0284C7]/30"
+                  className="rounded-lg border border-black/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6B3410]/30"
                 >
                   <option value="">Semua Level</option>
                   <option value="basic">Basic</option>
@@ -356,11 +356,11 @@ export default function AdminMembership() {
                         <td className="py-3 px-2">
                           {user.next_level_info?.next_level ? (
                             <div className="text-xs">
-                              <p className="text-[#0284C7] font-bold">{user.next_level_info.next_level}</p>
+                              <p className="text-[#6B3410] font-bold">{user.next_level_info.next_level}</p>
                               <p className="text-[#414844]/60">{user.next_level_info.points_needed} pts</p>
                               <div className="w-full bg-black/5 rounded-full h-1 mt-1">
                                 <div
-                                  className="bg-[#0284C7] h-1 rounded-full transition-all"
+                                  className="bg-[#6B3410] h-1 rounded-full transition-all"
                                   style={{ width: `${user.next_level_info.progress_percentage}%` }}
                                 />
                               </div>
@@ -419,7 +419,7 @@ export default function AdminMembership() {
                         <td className="py-3 px-2">
                           <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${
                             transaction.type === 'upgrade_premium'
-                              ? 'bg-[#0284C7] text-white'
+                              ? 'bg-[#6B3410] text-white'
                               : 'bg-[#F59E0B] text-white'
                           }`}>
                             {transaction.type === 'upgrade_premium' ? 'Upgrade' : 'Renewal'}
@@ -455,7 +455,7 @@ export default function AdminMembership() {
                 <select
                   value={transactionFilters.type}
                   onChange={(e) => setTransactionFilters(prev => ({ ...prev, type: e.target.value }))}
-                  className="rounded-lg border border-black/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0284C7]/30"
+                  className="rounded-lg border border-black/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6B3410]/30"
                 >
                   <option value="">Semua Type</option>
                   <option value="upgrade">Upgrade</option>
@@ -464,7 +464,7 @@ export default function AdminMembership() {
                 <select
                   value={transactionFilters.payment_status}
                   onChange={(e) => setTransactionFilters(prev => ({ ...prev, payment_status: e.target.value }))}
-                  className="rounded-lg border border-black/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0284C7]/30"
+                  className="rounded-lg border border-black/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6B3410]/30"
                 >
                   <option value="">Semua Status</option>
                   <option value="pending">Pending</option>
@@ -499,7 +499,7 @@ export default function AdminMembership() {
                         <td className="py-3 px-2">
                           <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${
                             transaction.type === 'upgrade'
-                              ? 'bg-[#0284C7] text-white'
+                              ? 'bg-[#6B3410] text-white'
                               : 'bg-[#F59E0B] text-white'
                           }`}>
                             {transaction.type === 'upgrade' ? 'Upgrade' : 'Renewal'}

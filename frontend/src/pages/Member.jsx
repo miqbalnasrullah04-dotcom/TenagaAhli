@@ -119,14 +119,14 @@ export default function Member() {
       <span className="inline-flex flex-col ml-1 -space-y-1 align-middle">
         <span
           className={`material-symbols-outlined text-[14px] leading-none ${
-            isActive && sortConfig.direction === 'asc' ? 'text-[#0EA5E9]' : 'text-on-surface-variant/40'
+            isActive && sortConfig.direction === 'asc' ? 'text-[#8B4513]' : 'text-on-surface-variant/40'
           }`}
         >
           arrow_drop_up
         </span>
         <span
           className={`material-symbols-outlined text-[14px] leading-none ${
-            isActive && sortConfig.direction === 'desc' ? 'text-[#0EA5E9]' : 'text-on-surface-variant/40'
+            isActive && sortConfig.direction === 'desc' ? 'text-[#8B4513]' : 'text-on-surface-variant/40'
           }`}
         >
           arrow_drop_down
@@ -145,9 +145,9 @@ export default function Member() {
         {t('member.subtitle', 'Daftar tenaga ahli profesional yang telah tersertifikasi dan terdaftar di TenagaAhli.com.')}
       </p>
 
-      <div className="bg-white rounded-xl border border-[#0EA5E9]/25 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-xl border border-[#8B4513]/25 shadow-sm overflow-hidden">
         {/* Toolbar: entries + search */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-5 border-b border-[#0EA5E9]/20">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-5 border-b border-[#8B4513]/20">
           <div className="flex items-center gap-2 text-sm text-on-surface-variant">
             <span>{t('member.show', 'Tampilkan')}</span>
             <select
@@ -156,7 +156,7 @@ export default function Member() {
                 setEntriesPerPage(Number(e.target.value));
                 setCurrentPage(1);
               }}
-              className="border border-[#0EA5E9]/30 rounded-lg px-2 py-1.5 text-sm focus:ring-[#0EA5E9] focus:border-[#0EA5E9] bg-white text-on-surface-variant outline-none"
+              className="border border-[#8B4513]/30 rounded-lg px-2 py-1.5 text-sm focus:ring-[#8B4513] focus:border-[#8B4513] bg-white text-on-surface-variant outline-none"
             >
               {[10, 18, 25, 50].map((n) => (
                 <option key={n} value={n}>
@@ -178,7 +178,7 @@ export default function Member() {
                 setCurrentPage(1);
               }}
               placeholder={t('member.search_placeholder', 'Cari nama, instansi, atau nomor member')}
-              className="w-full pl-9 pr-4 py-2 text-sm border border-[#0EA5E9]/30 rounded-lg focus:ring-[#0EA5E9] focus:border-[#0EA5E9] outline-none"
+              className="w-full pl-9 pr-4 py-2 text-sm border border-[#8B4513]/30 rounded-lg focus:ring-[#8B4513] focus:border-[#8B4513] outline-none"
             />
           </div>
         </div>
@@ -189,7 +189,7 @@ export default function Member() {
             <div className="flex items-center justify-center py-12">
               <div className="flex flex-col items-center gap-4">
                 <div className="relative">
-                  <span className="w-10 h-10 rounded-full border-4 border-gray-200 border-t-[#0EA5E9] animate-spin block" />
+                  <span className="w-10 h-10 rounded-full border-4 border-gray-200 border-t-[#8B4513] animate-spin block" />
                 </div>
                 <p className="text-gray-600 text-sm">{t('member.loading', 'Memuat data anggota...')}</p>
               </div>
@@ -197,7 +197,7 @@ export default function Member() {
           ) : (
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="bg-[#0EA5E9]/5">
+                <tr className="bg-[#8B4513]/5">
                   {columns.map((col) => (
                     <th
                       key={col.key}
@@ -223,8 +223,8 @@ export default function Member() {
                   paginatedMembers.map((m, idx) => (
                     <tr
                       key={m.id}
-                      className={`border-t border-[#0EA5E9]/10 hover:bg-[#0EA5E9]/5 transition-colors ${
-                        idx % 2 === 0 ? 'bg-white' : 'bg-[#0EA5E9]/[0.03]'
+                      className={`border-t border-[#8B4513]/10 hover:bg-[#8B4513]/5 transition-colors ${
+                        idx % 2 === 0 ? 'bg-white' : 'bg-[#8B4513]/[0.03]'
                       }`}
                     >
                       <td className="px-6 py-4 text-on-background">{m.nama || m.merge}</td>
@@ -240,7 +240,7 @@ export default function Member() {
 
         {/* Footer: info + pagination */}
         {!loading && (
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-5 border-t border-[#0EA5E9]/20 text-sm text-on-surface-variant">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-5 border-t border-[#8B4513]/20 text-sm text-on-surface-variant">
             <span>
               {t('member.showing', 'Menampilkan')} {showingFrom} {t('member.to', 'sampai')} {showingTo} {t('member.of', 'dari')} {totalEntries} {t('member.entries', 'entri')}
             </span>
@@ -268,7 +268,7 @@ export default function Member() {
                           onClick={() => setCurrentPage(page)}
                           className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                             currentPage === page
-                              ? 'bg-[#0EA5E9] text-white font-bold shadow-sm'
+                              ? 'bg-[#8B4513] text-white font-bold shadow-sm'
                               : 'text-gray-600 hover:bg-gray-100'
                           }`}
                         >

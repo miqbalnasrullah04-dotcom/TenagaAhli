@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Certificate extends Model
 {
-    protected $fillable = ['expert_id', 'nama_sertifikat', 'penerbit', 'tahun', 'file_path'];
+    protected $fillable = ['expert_id', 'nama_sertifikat', 'penerbit', 'tahun', 'file_path', 'is_primary'];
+
+    protected $casts = [
+        'is_primary' => 'boolean',
+    ];
 
     public function expert()
     {

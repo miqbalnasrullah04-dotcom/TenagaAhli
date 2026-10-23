@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from '../context/LanguageContext.jsx';
+import { usePageLoading } from '../context/LoadingContext.jsx';
 import api from '../api/client.js';
 import NavbarBackground from '../components/NavbarBackground.jsx';
 
@@ -23,11 +24,12 @@ const dummyItems = [
 
 export default function Pamflet() {
   const { t } = useTranslation();
+  const { reportReady } = usePageLoading();
   const [items, setItems] = useState([]);
   const [selectedImg, setSelectedImg] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const BACKEND_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://tenagaahli.latihan.co.id';
+  const BACKEND_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://tenagaahli.com';
 
   useEffect(() => {
     setLoading(true);
@@ -50,8 +52,11 @@ export default function Pamflet() {
         setItems(mappedData.length > 0 ? mappedData : dummyItems);
       })
       .catch(() => setItems(dummyItems))
-      .finally(() => setLoading(false));
-  }, [BACKEND_URL]);
+      .finally(() => {
+        setLoading(false);
+        reportReady();
+      });
+  }, [BACKEND_URL, reportReady]);
 
   const safeItems = Array.isArray(items) ? items : [];
 
@@ -61,7 +66,7 @@ export default function Pamflet() {
 
 
       {/* Hero — Menggunakan Gradasi Tema Biru */}
-      <section className="pt-36 pb-20 bg-gradient-to-b from-[#0369A1] via-[#0284C7] to-[#0EA5E9]">
+      <section className="pt-36 pb-20 bg-gradient-to-b from-[#55290A] via-[#6B3410] to-[#8B4513]">
         <div className="max-w-7xl mx-auto px-6">
           <span className="inline-block px-4 py-1 rounded-full bg-white/20 text-white border border-white/40 text-sm font-semibold mb-5">
             {t('pamphlets.badge', 'Informasi Terbaru')}
@@ -117,7 +122,7 @@ export default function Pamflet() {
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent transition duration-500 flex flex-col justify-end p-6">
                   <div className="w-full">
-                    <span className="inline-block bg-[#0EA5E9] text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">
+                    <span className="inline-block bg-[#8B4513] text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">
                       {t('pamphlets.label', 'PAMFLET')}
                     </span>
                     <h2 className="text-2xl font-bold text-white leading-snug drop-shadow-lg">

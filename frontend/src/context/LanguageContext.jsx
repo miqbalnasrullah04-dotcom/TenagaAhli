@@ -32,7 +32,8 @@ export function LanguageProvider({ children }) {
     }
 
     // Check LibreTranslate cache
-    const cached = libreTranslateService.getCachedTranslation(sourceText, 'en');
+    const cached = libreTranslateService.getCachedTranslation(sourceText, 'en') ||
+      (typeof keyOrText === 'string' ? libreTranslateService.getCachedTranslation(keyOrText, 'en') : null);
     if (cached) {
       return cached;
     }
@@ -41,6 +42,9 @@ export function LanguageProvider({ children }) {
     if (translations[sourceText]) {
       return translations[sourceText];
     }
+    if (keyOrText && translations[keyOrText]) {
+      return translations[keyOrText];
+    }
 
     // Trigger async translation in background
     libreTranslateService.translateText(sourceText, 'id', 'en').then((translated) => {
@@ -48,6 +52,7 @@ export function LanguageProvider({ children }) {
         setTranslations((prev) => ({
           ...prev,
           [sourceText]: translated,
+          ...(keyOrText ? { [keyOrText]: translated } : {}),
         }));
       }
     });

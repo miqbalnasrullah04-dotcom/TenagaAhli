@@ -5,7 +5,7 @@ export default function AdminInvoices() {
   const status = searchParams.get('status') || 'Semua';
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-[#0284C7]/15 p-6 min-h-[500px]">
+    <div className="bg-white rounded-xl shadow-sm border border-[#6B3410]/15 p-6 min-h-[500px]">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-xl font-bold text-[#1B1C1A]">Manajemen Invoice</h2>

@@ -26,7 +26,7 @@ export default function AdminPamfletForm() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
-  const BACKEND_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://tenagaahli.latihan.co.id';
+  const BACKEND_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://tenagaahli.com';
 
   useEffect(() => {
     if (!isEdit) return;
@@ -111,16 +111,16 @@ export default function AdminPamfletForm() {
   return (
     <div>
       <div className="mb-6 flex items-center gap-3">
-        <button onClick={() => navigate('/admin/pamflet')} className="text-[#414844]/60 hover:text-[#0284C7]">
+        <button onClick={() => navigate('/admin/pamflet')} className="text-[#414844]/60 hover:text-[#6B3410]">
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
         <div>
-          <h2 className="text-2xl font-bold text-[#0284C7]">{isEdit ? 'Edit Pamflet' : 'Tambah Pamflet'}</h2>
+          <h2 className="text-2xl font-bold text-[#6B3410]">{isEdit ? 'Edit Pamflet' : 'Tambah Pamflet'}</h2>
           <p className="text-[#414844]/80 text-sm mt-1">Kelola pamflet yang ditampilkan di halaman public</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-[#0284C7]/15 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-xl border border-[#6B3410]/15 shadow-sm overflow-hidden">
         <div className="grid lg:grid-cols-2 gap-0">
           {/* Left: Form */}
           <div className="p-6">
@@ -134,7 +134,7 @@ export default function AdminPamfletForm() {
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
                   placeholder="Contoh: Sosialisasi AMDAL 2026"
-                  className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+                  className="w-full mt-1 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
                 />
                 <p className="text-xs text-[#414844]/60 mt-1">Judul akan ditampilkan di card pamflet</p>
               </div>
@@ -147,7 +147,7 @@ export default function AdminPamfletForm() {
                   type="file"
                   accept="image/jpeg,image/png,image/jpg"
                   onChange={handleImageChange}
-                  className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+                  className="w-full mt-1 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
                 />
                 <p className="text-xs text-[#414844]/60 mt-1">Gambar akan ditampilkan sebagai background card</p>
               </div>
@@ -159,7 +159,7 @@ export default function AdminPamfletForm() {
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                   placeholder="Deskripsi singkat tentang pamflet ini"
-                  className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+                  className="w-full mt-1 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
                 />
               </div>
 
@@ -169,7 +169,7 @@ export default function AdminPamfletForm() {
                   <select
                     value={form.type}
                     onChange={(e) => setForm({ ...form, type: e.target.value })}
-                    className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+                    className="w-full mt-1 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
                   >
                     <option value="announcement">Pengumuman</option>
                     <option value="training">Pelatihan</option>
@@ -184,36 +184,36 @@ export default function AdminPamfletForm() {
                     type="number"
                     value={form.order}
                     onChange={(e) => setForm({ ...form, order: parseInt(e.target.value) || 0 })}
-                    className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+                    className="w-full mt-1 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 p-3 bg-[#0284C7]/5 rounded-lg">
+              <div className="flex items-center gap-2 p-3 bg-[#6B3410]/5 rounded-lg">
                 <input
                   type="checkbox"
                   id="is_published"
                   checked={form.is_published}
                   onChange={(e) => setForm({ ...form, is_published: e.target.checked })}
-                  className="w-4 h-4 text-[#0284C7] border-[#0284C7]/30 rounded focus:ring-[#0284C7]"
+                  className="w-4 h-4 text-[#6B3410] border-[#6B3410]/30 rounded focus:ring-[#6B3410]"
                 />
                 <label htmlFor="is_published" className="text-sm font-medium text-[#414844] cursor-pointer">
                   Publikasikan pamflet (tampilkan di halaman public)
                 </label>
               </div>
 
-              <details className="border border-[#0284C7]/20 rounded-lg">
-                <summary className="cursor-pointer p-3 text-sm font-medium text-[#0284C7] hover:bg-[#0284C7]/5">
+              <details className="border border-[#6B3410]/20 rounded-lg">
+                <summary className="cursor-pointer p-3 text-sm font-medium text-[#6B3410] hover:bg-[#6B3410]/5">
                   Info Tambahan (Opsional)
                 </summary>
-                <div className="p-3 border-t border-[#0284C7]/10 flex flex-col gap-3">
+                <div className="p-3 border-t border-[#6B3410]/10 flex flex-col gap-3">
                   <div>
                     <label className="text-xs font-bold uppercase text-[#414844]/70">Tanggal Acara</label>
                     <input
                       type="date"
                       value={form.event_date}
                       onChange={(e) => setForm({ ...form, event_date: e.target.value })}
-                      className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+                      className="w-full mt-1 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
                     />
                   </div>
                   <div>
@@ -221,7 +221,7 @@ export default function AdminPamfletForm() {
                     <input
                       value={form.location}
                       onChange={(e) => setForm({ ...form, location: e.target.value })}
-                      className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+                      className="w-full mt-1 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
                     />
                   </div>
                   <div>
@@ -229,7 +229,7 @@ export default function AdminPamfletForm() {
                     <input
                       value={form.organizer}
                       onChange={(e) => setForm({ ...form, organizer: e.target.value })}
-                      className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+                      className="w-full mt-1 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
                     />
                   </div>
                 </div>
@@ -239,7 +239,7 @@ export default function AdminPamfletForm() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 bg-[#0284C7] text-white py-3 rounded-lg text-sm font-bold hover:bg-[#0369A1] disabled:opacity-60 transition-colors"
+                  className="flex-1 bg-[#6B3410] text-white py-3 rounded-lg text-sm font-bold hover:bg-[#55290A] disabled:opacity-60 transition-colors"
                 >
                   {saving ? 'Menyimpan...' : 'Simpan Pamflet'}
                 </button>
@@ -255,8 +255,8 @@ export default function AdminPamfletForm() {
           </div>
 
           {/* Right: Preview Card */}
-          <div className="bg-gradient-to-br from-[#0EA5E9]/5 to-[#0284C7]/5 p-6 flex flex-col">
-            <h3 className="text-sm font-bold text-[#0284C7] mb-3 flex items-center gap-2">
+          <div className="bg-gradient-to-br from-[#8B4513]/5 to-[#6B3410]/5 p-6 flex flex-col">
+            <h3 className="text-sm font-bold text-[#6B3410] mb-3 flex items-center gap-2">
               <span className="material-symbols-outlined text-[18px]">visibility</span>
               Preview Card Pamflet
             </h3>
@@ -281,7 +281,7 @@ export default function AdminPamfletForm() {
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-6">
-                        <span className="inline-block w-fit bg-[#0EA5E9] text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">
+                        <span className="inline-block w-fit bg-[#8B4513] text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">
                           PAMFLET
                         </span>
                         <h2 className="text-2xl font-bold text-white leading-snug drop-shadow-lg">

@@ -3,18 +3,27 @@ import { useLocation } from 'react-router-dom';
 import PageLoader from './PageLoader';
 import { usePageLoading } from '../context/LoadingContext.jsx';
 
-// Loader tetap tampil minimal segini, biar animasinya nggak "kedip"
-// walaupun datanya selesai fetch dalam sekejap.
-const MIN_DURATION = 600; // ms
+// 1 siklus animasi topi wisuda selesai utuh (1.8 detik)
+const ANIMATION_DURATION = 1800;
+// Batas maksimal mutlak: jaminan anti-ngestuck jika jaringan lambat / halaman lambat
+const MAX_LOADER_TIMEOUT = 2800;
 
-// Jaring pengaman: kalau suatu halaman lupa "lapor selesai" atau API
-// lambat/gantung, loader tetap akan hilang otomatis setelah durasi ini.
-const MAX_DURATION = 6000; // ms
+// Daftar route auth yang tidak boleh memicu RouteLoader (harus langsung tampil)
+const AUTH_ROUTES = [
+  '/sign-in',
+  '/signin',
+  '/login',
+  '/daftar',
+  '/lupa-password',
+  '/verifikasi-email',
+  '/menunggu-verifikasi',
+];
 
-// Halaman-halaman dashboard/member punya layout sendiri dan tidak memanggil
-// reportReady(), jadi RouteLoader tidak boleh aktif di sini.
+// Daftar route dashboard & akun yang tidak boleh memicu RouteLoader
 const DASHBOARD_USER_ROUTES = [
   '/dashboard',
+  '/dashboard-surveyor',
+  '/akun',
   '/profil-saya',
   '/membership',
   '/paket',
@@ -29,46 +38,49 @@ const DASHBOARD_USER_ROUTES = [
   '/ulasan',
   '/statistik',
   '/invoice',
+  '/top-up',
+  '/riwayat-point',
+  '/kelola-iklan',
+  '/kelola-berita',
+  '/tulis-berita',
+  '/konsultasi',
+  '/jadwal',
+  '/chat',
+  '/pendapatan',
+  '/produk',
+  '/penjualan',
+  '/penjualan-produk',
+  '/pesanan-saya',
 ];
 
-// Admin routes juga tidak butuh RouteLoader
 const ADMIN_ROUTES_PREFIX = ['/admin'];
 
-// Function to check if route should skip loader
-const shouldSkipLoader = (pathname) => {
-  // Exact match untuk dashboard user routes
-  if (DASHBOARD_USER_ROUTES.includes(pathname)) return true;
-  
-  // Pattern match untuk invoice dengan parameter
+export const shouldSkipLoader = (pathname) => {
+  if (!pathname) return false;
+  if (AUTH_ROUTES.some((route) => pathname === route || pathname.startsWith(route + '/'))) return true;
+  if (ADMIN_ROUTES_PREFIX.some((prefix) => pathname.startsWith(prefix))) return true;
   if (pathname.startsWith('/invoice/')) return true;
-  
-  // Pattern match untuk admin routes
-  if (ADMIN_ROUTES_PREFIX.some(prefix => pathname.startsWith(prefix))) return true;
-  
-  // Skip loader untuk semua dashboard user routes yang mungkin ada parameter
-  if (pathname.startsWith('/dashboard') || 
-      pathname.startsWith('/profil') || 
-      pathname.startsWith('/member') ||
-      pathname.startsWith('/paket') ||
-      pathname.startsWith('/pembayaran')) return true;
-      
+  if (pathname.startsWith('/chat/')) return true;
+  if (pathname.startsWith('/checkout/')) return true;
+  if (DASHBOARD_USER_ROUTES.some((route) => pathname === route || pathname.startsWith(route + '/'))) return true;
   return false;
 };
 
 export default function RouteLoader({ children }) {
   const location = useLocation();
   const { dataReady, resetReady } = usePageLoading();
-  const [visible, setVisible] = useState(true);
+  const skip = shouldSkipLoader(location.pathname);
+  const [visible, setVisible] = useState(!skip);
   const startedAtRef = useRef(Date.now());
+  const timerRef = useRef(null);
+  const safetyTimerRef = useRef(null);
 
-  const shouldSkip = shouldSkipLoader(location.pathname);
-
-  // Setiap kali rute berubah: nyalakan lagi loader, reset status "data siap",
-  // dan pasang jaring pengaman durasi maksimum.
+  // Setiap kali rute berubah:
   useEffect(() => {
-    if (shouldSkip) {
+    if (shouldSkipLoader(location.pathname)) {
       setVisible(false);
-      resetReady();
+      if (timerRef.current) clearTimeout(timerRef.current);
+      if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
       return;
     }
 
@@ -76,32 +88,51 @@ export default function RouteLoader({ children }) {
     resetReady();
     startedAtRef.current = Date.now();
 
-    const maxTimer = setTimeout(() => {
-      setVisible(false);
-    }, MAX_DURATION);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
 
-    return () => clearTimeout(maxTimer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Default: tunggu animasi topi wisuda selesai 1 siklus penuh (1.8s) baru transisi ke halaman
+    timerRef.current = setTimeout(() => {
+      setVisible(false);
+    }, ANIMATION_DURATION);
+
+    // Hard safety timer: jaminan mutlak loader tertutup jika halaman lambat (anti-ngestuck)
+    safetyTimerRef.current = setTimeout(() => {
+      setVisible(false);
+    }, MAX_LOADER_TIMEOUT);
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
+    };
   }, [location.pathname]);
 
-  // Begitu halaman melapor datanya sudah siap (dataReady === true),
-  // hitung sisa waktu supaya tetap memenuhi MIN_DURATION, baru sembunyikan.
+  // Jika halaman menggunakan dataReady (lapor selesai fetch):
+  // Tetap tunggu sampai siklus animasi selesai utuh (ANIMATION_DURATION) baru buka halaman
   useEffect(() => {
+    if (shouldSkipLoader(location.pathname)) return;
     if (!dataReady) return;
 
     const elapsed = Date.now() - startedAtRef.current;
-    const remaining = Math.max(MIN_DURATION - elapsed, 0);
+    const remaining = Math.max(ANIMATION_DURATION - elapsed, 0);
 
-    const hideTimer = setTimeout(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
       setVisible(false);
     }, remaining);
 
-    return () => clearTimeout(hideTimer);
-  }, [dataReady]);
+    return () => {
+      // Biarkan timer berjalan saat cleanup
+    };
+  }, [dataReady, location.pathname]);
+
+  if (skip) {
+    return children;
+  }
 
   return (
     <>
-      <PageLoader visible={visible} />
+      <PageLoader visible={visible} routeKey={location.pathname} />
       {children}
     </>
   );

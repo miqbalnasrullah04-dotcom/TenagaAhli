@@ -279,12 +279,12 @@ export default function LengkapiProfil() {
               items={form.educations}
               onAdd={() => addListItem('educations', emptyEducation)}
               onRemove={(id) => removeListItem('educations', id)}
-              addLabel="Tambah Riwayat Pendidikan"
+              addLabel="Tambah Riwayat Pendidikan (Dari yang Tertinggi)"
               render={(item) => (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <input
                     className="w-full rounded-lg border border-outline-variant/40 px-3 py-2 text-sm bg-white focus:outline-none focus:border-[#2E5E3B]"
-                    placeholder="Jenjang (S1/S2/S3)"
+                    placeholder="Jenjang (S3/S2/S1 - dari tertinggi)"
                     value={item.degree}
                     onChange={(e) => updateListItem('educations', item.id, 'degree', e.target.value)}
                   />

@@ -43,4 +43,10 @@ return [
         'is_3ds' => env('MIDTRANS_IS_3DS', true),
     ],
 
+    'rajaongkir' => [
+        'api_key' => env('RAJAONGKIR_API_KEY', 'fXSokXZA827d17be18f9124fbDIM8j5q'),
+        'base_url' => env('RAJAONGKIR_BASE_URL', 'https://rajaongkir.komerce.id/api/v1'),
+        'origin_id' => env('RAJAONGKIR_DEFAULT_ORIGIN_ID', 4816),
+    ],
+
 ];

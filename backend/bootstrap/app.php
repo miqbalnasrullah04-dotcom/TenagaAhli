@@ -12,10 +12,19 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // MATIKAN PENGECEKAN CSRF UNTUK SEMUA RUTE YANG DIAWALI /api/
+        // MATIKAN PENGECEKAN CSRF UNTUK SEMUA RUTE API & WEBHOOK
         $middleware->validateCsrfTokens(except: [
             'api/*',
+            'midtrans/*',
+            'payment/*',
+            'payments/*',
         ]);
+
+        // Matikan redirect web untuk tamu tidak terautentikasi (selalu return JSON 401 untuk API)
+        $middleware->redirectGuestsTo(fn () => null);
+
+        // Apply custom CORS middleware to all routes
+        $middleware->prepend(\App\Http\Middleware\HandleCors::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

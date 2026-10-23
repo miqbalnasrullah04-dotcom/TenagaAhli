@@ -12,6 +12,7 @@ class MembershipTransaction extends Model
 
     protected $fillable = [
         'user_id',
+        'reference_code',
         'package',
         'type',
         'price',
@@ -21,6 +22,31 @@ class MembershipTransaction extends Model
         'expires_at',
         'payment_status',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->reference_code)) {
+                // Generate unique reference code
+                $attempts = 0;
+                do {
+                    $referenceCode = 'MBRS-' . date('Ymd') . '-' . str_pad(random_int(1, 99999), 5, '0', STR_PAD_LEFT);
+                    $attempts++;
+                } while (
+                    self::where('reference_code', $referenceCode)->exists() &&
+                    $attempts < 10
+                );
+
+                if ($attempts >= 10) {
+                    throw new \Exception('Unable to generate unique reference code after 10 attempts');
+                }
+
+                $model->reference_code = $referenceCode;
+            }
+        });
+    }
 
     protected $casts = [
         'price' => 'decimal:2',
