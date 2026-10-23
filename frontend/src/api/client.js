@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // API Configuration
-const baseURL = import.meta.env.VITE_API_URL || 'https://tenagaahli.latihan.co.id/api';
+const baseURL = import.meta.env.VITE_API_URL || 'https://tenagaahli.com/api';
 
 // Create axios instance with base configuration
 const api = axios.create({
@@ -10,7 +10,7 @@ const api = axios.create({
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   },
-  timeout: 30000, // 30 seconds timeout
+  timeout: 45000, // 45 seconds timeout
 });
 
 // Request interceptor - attach auth token and handle requests
@@ -22,8 +22,17 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
     
-    // Log request for debugging
-    console.log(`🔄 API Request: ${config.method?.toUpperCase()} ${config.url}`);
+    // Automatically delete Content-Type when data is FormData
+    // so browser/axios properly sets multipart/form-data with boundary
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
+      delete config.headers['content-type'];
+    }
+    
+    // Log request for debugging (kecuali heartbeat ping berkala agar console tetap bersih)
+    if (!config.url?.includes('/presence/ping')) {
+      console.log(`🔄 API Request: ${config.method?.toUpperCase()} ${config.url}`);
+    }
     
     return config;
   },
@@ -36,17 +45,22 @@ api.interceptors.request.use(
 // Response interceptor - handle responses and errors
 api.interceptors.response.use(
   (response) => {
-    console.log(`✅ API Response: ${response.config.method?.toUpperCase()} ${response.config.url} - ${response.status}`);
+    if (!response.config.url?.includes('/presence/ping')) {
+      console.log(`✅ API Response: ${response.config.method?.toUpperCase()} ${response.config.url} - ${response.status}`);
+    }
     return response;
   },
   (error) => {
-    console.error('❌ Response Error:', error.response?.data || error.message);
+    const isHeartbeat = error.config?.url?.includes('/presence/ping') || error.config?.url?.includes('/presence/offline');
+    if (!isHeartbeat) {
+      console.error('❌ Response Error:', error.response?.data || error.message);
+    }
     
     // Handle 401 Unauthorized - redirect to login
     if (error.response?.status === 401) {
       localStorage.removeItem('amdal_token');
       localStorage.removeItem('amdal_user');
-      window.location.href = '/login';
+      window.location.href = '/sign-in';
     }
     
     return Promise.reject(error);

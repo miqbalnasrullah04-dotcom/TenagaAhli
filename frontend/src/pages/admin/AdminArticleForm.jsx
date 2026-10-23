@@ -55,16 +55,16 @@ export default function AdminArticleForm() {
   return (
     <div>
       <div className="mb-6 flex items-center gap-3">
-        <button onClick={() => navigate('/admin/artikel')} className="text-[#414844]/60 hover:text-[#0284C7]">
+        <button onClick={() => navigate('/admin/artikel')} className="text-[#414844]/60 hover:text-[#8B4513]">
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
         <div>
-          <h2 className="text-2xl font-bold text-[#0284C7]">{isEdit ? 'Edit Artikel' : 'Tambah Artikel'}</h2>
+          <h2 className="text-2xl font-bold text-[#8B4513]">{isEdit ? 'Edit Artikel' : 'Tambah Artikel'}</h2>
           <p className="text-[#414844]/80 text-sm mt-1">Kelola artikel dan publikasi TenagaAhli.com.</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-[#0284C7]/15 shadow-sm p-6 max-w-2xl">
+      <div className="bg-white rounded-xl border border-[#8B4513]/15 shadow-sm p-6 max-w-2xl">
         {error && <p className="bg-[#FFDAD6] text-[#93000A] text-sm rounded-lg p-3 mb-4">{error}</p>}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -74,7 +74,7 @@ export default function AdminArticleForm() {
               required
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
-              className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+              className="w-full mt-1 border border-[#8B4513]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#8B4513] focus:border-[#8B4513]"
             />
           </div>
           <div>
@@ -83,7 +83,7 @@ export default function AdminArticleForm() {
               rows={2}
               value={form.excerpt}
               onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
-              className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+              className="w-full mt-1 border border-[#8B4513]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#8B4513] focus:border-[#8B4513]"
             />
           </div>
           <div>
@@ -93,7 +93,7 @@ export default function AdminArticleForm() {
               rows={8}
               value={form.content}
               onChange={(e) => setForm({ ...form, content: e.target.value })}
-              className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+              className="w-full mt-1 border border-[#8B4513]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#8B4513] focus:border-[#8B4513]"
             />
           </div>
           <div>
@@ -103,7 +103,7 @@ export default function AdminArticleForm() {
             <input
               value={form.thumbnail}
               onChange={(e) => setForm({ ...form, thumbnail: e.target.value })}
-              className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+              className="w-full mt-1 border border-[#8B4513]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#8B4513] focus:border-[#8B4513]"
             />
           </div>
           <div>
@@ -114,14 +114,14 @@ export default function AdminArticleForm() {
               type="date"
               value={form.published_at}
               onChange={(e) => setForm({ ...form, published_at: e.target.value })}
-              className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+              className="w-full mt-1 border border-[#8B4513]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#8B4513] focus:border-[#8B4513]"
             />
           </div>
           <div className="flex gap-3 mt-2">
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 bg-[#0284C7] text-white py-3 rounded-lg text-sm font-bold hover:bg-[#0369A1] disabled:opacity-60"
+              className="flex-1 bg-[#6B3410] text-white py-3 rounded-lg text-sm font-bold hover:bg-[#55290A] disabled:opacity-60"
             >
               {saving ? 'Menyimpan...' : 'Simpan'}
             </button>

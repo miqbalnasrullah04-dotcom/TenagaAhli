@@ -24,29 +24,13 @@ class SyncMembershipLevel
     }
 
     /**
-     * Sync user membership level and premium status
+     * Sync user membership package expiry status
      */
     private function syncUserMembership($user): void
     {
-        $needsUpdate = false;
-        $updates = [];
-
-        // Check if level needs updating based on points
-        $calculatedLevel = $user->calculateLevel();
-        if ($user->membership_level !== $calculatedLevel) {
-            $updates['membership_level'] = $calculatedLevel;
-            $needsUpdate = true;
-        }
-
-        // Check if premium should be expired
-        if ($user->package === 'premium' && !$user->isPremium()) {
-            $updates['package'] = 'free';
-            $needsUpdate = true;
-        }
-
-        // Update if needed
-        if ($needsUpdate) {
-            $user->update($updates);
+        // Check if premium / platinum / ekonomis / eksklusif should be expired
+        if (in_array($user->package, ['premium', 'platinum', 'ekonomis', 'eksklusif', 'ekslusif', 'esklusif']) && !$user->isPremium()) {
+            $user->update(['package' => 'free']);
         }
     }
 }

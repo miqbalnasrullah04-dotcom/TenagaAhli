@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from '../context/LanguageContext.jsx';
-import logo from "../assets/tenaga ahli 2.png";
+import logo from "../assets/new logo.png";
 import api from '../api/client.js';
 
 export default function MembershipLayout({ children }) {
@@ -10,8 +10,11 @@ export default function MembershipLayout({ children }) {
   const [user, setUser] = useState(null);
   const [isExpanded, setIsExpanded] = useState(true);
 
+  // Tentukan link dashboard berdasarkan role_type user
+  const [dashboardPath, setDashboardPath] = useState('/dashboard');
+
   const NAV_ITEMS = [
-    { to: '/dashboard',    label: t('Dashboard'),       icon: 'space_dashboard' },
+    { to: dashboardPath,   label: t('Dashboard'),       icon: 'space_dashboard' },
     { to: '/profil-saya',  label: t('Profil Saya'),     icon: 'person' },
     { to: '/membership',   label: t('Membership'),      icon: 'stars' },
     { to: '/paket',        label: t('Paket'),            icon: 'workspace_premium' },
@@ -19,15 +22,22 @@ export default function MembershipLayout({ children }) {
     { to: '/pembayaran',   label: t('Pembayaran'),       icon: 'payments' },
     { to: '/tiket',        label: t('Tiket'),            icon: 'support_agent' },
     { to: '/ulasan',       label: t('Ulasan'),           icon: 'star' },
-    { to: '/statistik',    label: t('Statistik'),        icon: 'bar_chart' },
-    { to: '/profil-publik',label: t('Profil Publik'),    icon: 'language' },
     { to: '/pengaturan',   label: t('Pengaturan'),       icon: 'settings' },
   ];
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem('amdal_user');
-      if (raw) setUser(JSON.parse(raw));
+      if (raw) {
+        const u = JSON.parse(raw);
+        setUser(u);
+        // Tentukan path dashboard sesuai role_type
+        if (u.role_type === 'surveyor') {
+          setDashboardPath('/dashboard-surveyor');
+        } else {
+          setDashboardPath('/dashboard');
+        }
+      }
     } catch {
       /* ignore malformed cache */
     }
@@ -58,21 +68,23 @@ export default function MembershipLayout({ children }) {
       `}</style>
 
       {/* Sidebar only - no topbar */}
-      <aside className={`fixed left-0 top-0 h-screen bg-gradient-to-b from-[#0EA5E9] to-[#1E3A8A] text-white flex flex-col transition-all duration-300 z-50 no-scrollbar ${isExpanded ? 'w-64' : 'w-20'}`}>
+      <aside className={`fixed left-0 top-0 h-screen bg-gradient-to-b from-[#8B4513] to-[#654321] text-white flex flex-col transition-all duration-300 z-50 no-scrollbar ${isExpanded ? 'w-64' : 'w-20'}`}>
         {/* Header Sidebar */}
-        <div className="p-4 flex items-center justify-between border-b border-white/10 h-16 shrink-0">
+        <div className="px-4 py-3 flex items-center justify-between border-b border-white/10 min-h-[76px] shrink-0">
           {isExpanded ? (
             <>
               <div className="flex flex-col items-start gap-1 overflow-hidden transition-all duration-200">
-                <img src={logo} alt="TenagaAhli.com" className="h-10 w-auto shrink-0" />
-                <span className="font-extrabold text-[10px] tracking-widest uppercase text-white/60 ml-0.5">{t('membership_layout.member', 'Member')}</span>
+                <img src={logo} alt="TenagaAhli.com" className="h-12 md:h-14 max-w-[170px] w-auto shrink-0 object-contain drop-shadow-sm" />
+                <span className="font-extrabold text-[10px] tracking-widest uppercase text-white/70 ml-0.5">
+                  {user?.role_type === 'surveyor' ? 'Surveyor' : (user?.role_type === 'klien' ? 'Klien' : 'Tenaga Ahli')}
+                </span>
               </div>
-              <button onClick={() => setIsExpanded(!isExpanded)} className="text-white/85 hover:text-white p-1 hover:bg-white/10 rounded transition-colors">
+              <button onClick={() => setIsExpanded(!isExpanded)} className="text-white/85 hover:text-white p-1.5 hover:bg-white/10 rounded-lg transition-colors">
                 <span className="material-symbols-outlined text-[22px]">menu</span>
               </button>
             </>
           ) : (
-            <button onClick={() => setIsExpanded(!isExpanded)} className="text-white/85 hover:text-white p-1 hover:bg-white/10 rounded transition-colors mx-auto">
+            <button onClick={() => setIsExpanded(!isExpanded)} className="text-white/85 hover:text-white p-1.5 hover:bg-white/10 rounded-lg transition-colors mx-auto">
               <span className="material-symbols-outlined text-[22px]">menu</span>
             </button>
           )}

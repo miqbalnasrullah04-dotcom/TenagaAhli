@@ -72,6 +72,33 @@ class ReviewController extends Controller
             ], 422);
         }
 
+        // Cek apakah user sudah pernah berkonsultasi (status selesai) dengan expert ini
+        $user = $request->user();
+        $email = $request->email ?: $user?->email;
+
+        $hasConsulted = false;
+        if ($user) {
+            $hasConsulted = \App\Models\Consultation::where('expert_id', $expert->id)
+                ->where('status', 'selesai')
+                ->where(function ($q) use ($user) {
+                    $q->where('user_id', $user->id)
+                      ->orWhere('client_email', $user->email);
+                })
+                ->exists();
+        } elseif ($email) {
+            $hasConsulted = \App\Models\Consultation::where('expert_id', $expert->id)
+                ->where('status', 'selesai')
+                ->where('client_email', $email)
+                ->exists();
+        }
+
+        if (!$hasConsulted) {
+            return response()->json([
+                'message' => 'Ulasan hanya dapat diberikan oleh pengguna yang telah melakukan sesi konsultasi dengan Tenaga Ahli / Surveyor ini. Silakan ajukan konsultasi terlebih dahulu.',
+                'can_review' => false,
+            ], 403);
+        }
+
         $review = Review::create([
             'expert_id'      => $expert->id,
             'user_id'        => $request->user()?->id,

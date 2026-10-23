@@ -99,7 +99,11 @@ const ShinyText = ({
     backgroundSize: '200% auto',
     WebkitBackgroundClip: 'text',
     backgroundClip: 'text',
-    WebkitTextFillColor: 'transparent'
+    WebkitTextFillColor: 'transparent',
+    paddingBottom: '0.18em',
+    marginBottom: '-0.18em',
+    paddingTop: '0.05em',
+    marginTop: '-0.05em',
   };
 
   return (

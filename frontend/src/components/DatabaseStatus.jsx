@@ -55,7 +55,7 @@ const DatabaseStatus = () => {
         <h3 className="text-lg font-semibold text-gray-900">Database Status</h3>
         <button
           onClick={checkHealth}
-          className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-3 py-1 text-sm bg-[#8B4513] text-white rounded hover:bg-[#6B3410]"
           disabled={status === 'checking'}
         >
           {status === 'checking' ? 'Checking...' : 'Refresh'}

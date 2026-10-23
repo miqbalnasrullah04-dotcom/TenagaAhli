@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from '../context/LanguageContext.jsx';
 import api from '../api/client.js';
+import logo from '../assets/new logo.png';
 
 /* ── Password rules ─────────────────────────────────────────────── */
 const getPwRules = (t) => [
@@ -12,14 +13,37 @@ const getPwRules = (t) => [
 
 /* ── Shared input class ─────────────────────────────────────────── */
 const INPUT_CLS =
-  'w-full mt-1.5 border border-outline-variant/50 rounded-lg px-4 py-2.5 text-sm placeholder:text-on-surface-variant/40 focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]/30 focus:border-[#0EA5E9] transition-colors bg-white';
+  'w-full mt-1.5 border border-outline-variant/50 rounded-lg px-4 py-2.5 text-sm placeholder:text-on-surface-variant/40 focus:outline-none focus:ring-2 focus:ring-[#8B4513]/30 focus:border-[#8B4513] transition-colors bg-white';
 
 export default function Daftar() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const initialRole = searchParams.get('role');
+
+  // Redirect jika user sudah login
+  useEffect(() => {
+    const token = localStorage.getItem('amdal_token');
+    const userRaw = localStorage.getItem('amdal_user');
+    if (token && userRaw) {
+      try {
+        const user = JSON.parse(userRaw);
+        if (user.role === 'admin') navigate('/admin', { replace: true });
+        else if (user.role_type === 'tenaga_ahli' || user.role_type === 'tenaga_teknis') navigate('/dashboard', { replace: true });
+        else if (user.role_type === 'surveyor') navigate('/dashboard-surveyor', { replace: true });
+        else navigate('/akun', { replace: true });
+      } catch {
+        // ignore
+      }
+    }
+  }, [navigate]);
 
   /* ── Form data ─────────────────────────────────────────────────── */
   const [form, setForm] = useState({
+    role_type:
+      initialRole === 'surveyor' || initialRole === 'tenaga_ahli' || initialRole === 'tenaga_teknis' || initialRole === 'klien'
+        ? initialRole
+        : '',
     name: '',
     email: '',
     password: '',
@@ -38,6 +62,10 @@ export default function Daftar() {
   /* ── Validation ─────────────────────────────────────────────────── */
   const canSubmit = () => {
     setError('');
+    if (!form.role_type) {
+      setError(t('Pilih peran Anda terlebih dahulu.'));
+      return false;
+    }
     if (!form.name || !form.email || !form.password) {
       setError(t('Semua field wajib diisi.'));
       return false;
@@ -65,6 +93,7 @@ export default function Daftar() {
         email: form.email,
         password: form.password,
         password_confirmation: form.password_confirmation,
+        role_type: form.role_type,
       });
 
       // Arahkan ke halaman verifikasi email
@@ -97,7 +126,7 @@ export default function Daftar() {
   return (
     <div className="min-h-screen flex">
       {/* ── Panel kiri — brand ─────────────────────────────────────── */}
-      <div className="hidden lg:flex lg:w-[42%] relative bg-gradient-to-br from-[#0369A1] via-[#0EA5E9] to-[#0284C7] overflow-hidden">
+      <div className="hidden lg:flex lg:w-[42%] relative bg-gradient-to-br from-[#55290A] via-[#8B4513] to-[#6B3410] overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           <svg
             className="wave-layer wave-layer-back"
@@ -105,7 +134,7 @@ export default function Daftar() {
             preserveAspectRatio="xMidYMid slice"
             fill="none"
           >
-            <g opacity="0.12" stroke="#BAE6FD" strokeWidth="1.5">
+            <g opacity="0.12" stroke="#EAD7C5" strokeWidth="1.5">
               <path d="M0,140 Q75,110 150,140 T300,140 T450,140 T600,140 T750,140 T900,140 T1050,140 T1200,140" />
               <path d="M0,360 Q75,330 150,360 T300,360 T450,360 T600,360 T750,360 T900,360 T1050,360 T1200,360" />
               <path d="M0,580 Q75,550 150,580 T300,580 T450,580 T600,580 T750,580 T900,580 T1050,580 T1200,580" />
@@ -119,7 +148,7 @@ export default function Daftar() {
             preserveAspectRatio="xMidYMid slice"
             fill="none"
           >
-            <g opacity="0.16" stroke="#BAE6FD" strokeWidth="1.5">
+            <g opacity="0.16" stroke="#EAD7C5" strokeWidth="1.5">
               <path d="M0,220 Q75,175 150,220 T300,220 T450,220 T600,220 T750,220 T900,220 T1050,220 T1200,220" />
               <path d="M0,440 Q75,395 150,440 T300,440 T450,440 T600,440 T750,440 T900,440 T1050,440 T1200,440" />
               <path d="M0,660 Q75,615 150,660 T300,660 T450,660 T600,660 T750,660 T900,660 T1050,660 T1200,660" />
@@ -132,7 +161,7 @@ export default function Daftar() {
             preserveAspectRatio="xMidYMid slice"
             fill="none"
           >
-            <g opacity="0.20" stroke="#E0F2FE" strokeWidth="1.5">
+            <g opacity="0.20" stroke="#F5EBE1" strokeWidth="1.5">
               <path d="M0,300 Q75,265 150,300 T300,300 T450,300 T600,300 T750,300 T900,300 T1050,300 T1200,300" />
               <path d="M0,520 Q75,485 150,520 T300,520 T450,520 T600,520 T750,520 T900,520 T1050,520 T1200,520" />
               <path d="M0,740 Q75,705 150,740 T300,740 T450,740 T600,740 T750,740 T900,740 T1050,740 T1200,740" />
@@ -141,9 +170,11 @@ export default function Daftar() {
         </div>
 
         <div className="relative z-10 flex flex-col justify-between p-12 text-white w-full">
-          <Link to="/" className="font-headline-md text-2xl font-bold tracking-tight">
-            TenagaAhli<span className="text-[#7DD3FC]">.com</span>
-          </Link>
+          <div className="inline-block">
+            <h1 className="text-3xl md:text-4xl font-bold">
+              <span style={{ color: '#ffffff' }}>Tenaga</span><span style={{ color: '#6B7280' }}>Ahli</span><span style={{ color: '#D2691E' }}>.com</span>
+            </h1>
+          </div>
 
           <div className="space-y-6">
             <h1 className="font-headline-lg text-4xl font-bold leading-tight">
@@ -152,21 +183,34 @@ export default function Daftar() {
             <p className="text-white/80 text-base leading-relaxed">
              {t('auth.register_hero.desc', 'Bergabunglah bersama tenaga ahli dari berbagai bidang dan tampilkan profil profesional Anda agar lebih mudah ditemukan oleh instansi, perusahaan, dan mitra yang membutuhkan keahlian Anda.')}
             </p>
-            <ul className="space-y-3">
+            <ul className="space-y-3.5">
               {[
-                t('auth.register_hero.feature1', 'Pendaftaran gratis dan mudah'),
-                t('auth.register_hero.feature2', 'Profil Anda akan terverifikasi oleh tim kami'),
-                t('auth.register_hero.feature3', 'Dapatkan kesempatan proyek dari seluruh Indonesia'),
+                {
+                  icon: 'bolt',
+                  text: t('auth.register_hero.feature1', 'Pendaftaran gratis dan mudah'),
+                },
+                {
+                  icon: 'verified_user',
+                  text: t('auth.register_hero.feature2', 'Profil Anda akan terverifikasi oleh tim kami'),
+                },
+                {
+                  icon: 'travel_explore',
+                  text: t('auth.register_hero.feature3', 'Dapatkan kesempatan proyek dari seluruh Indonesia'),
+                },
               ].map((item) => (
-                <li key={item} className="flex items-start gap-2.5 text-white/80 text-sm">
-                  <span className="material-symbols-outlined text-[#7DD3FC] text-[18px] mt-0.5">check_circle</span>
-                  <span>{item}</span>
+                <li key={item.text} className="flex items-center gap-3 text-white/90 text-sm">
+                  <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shrink-0 shadow-sm">
+                    <span className="material-symbols-outlined text-[18px] text-[#F5EBE1]">
+                      {item.icon}
+                    </span>
+                  </div>
+                  <span className="font-medium">{item.text}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          <p className="text-white/50 text-xs">© 2026 TenagaAhli.com — System Dynamics Center</p>
+          <p className="text-white/50 text-xs">© 2026 TenagaAhli.com — All rights reserved.</p>
         </div>
 
         <style>{`
@@ -198,10 +242,10 @@ export default function Daftar() {
 
       {/* ── Panel kanan — form ─────────────────────────────────────── */}
       <div className="flex-1 flex flex-col bg-background">
-        {/* Topbar mobile */}
-        <div className="lg:hidden pt-6 pb-2 text-center">
-          <Link to="/" className="font-headline-md text-xl font-bold text-[#0284C7]">
-            TenagaAhli.com
+        {/* Topbar dengan logo */}
+        <div className="pt-6 pb-2 text-center">
+          <Link to="/" className="inline-block">
+            <img src={logo} alt="TenagaAhli.com" className="h-12 sm:h-14 mx-auto w-auto object-contain" />
           </Link>
         </div>
 
@@ -228,6 +272,83 @@ export default function Daftar() {
 
               <div className="bg-white rounded-2xl border border-outline-variant/30 p-6 sm:p-8 shadow-sm">
                 <div className="flex flex-col gap-5">
+                  {/* Pilih Role — card visual */}
+                  <div>
+                    <label className="text-xs font-bold uppercase tracking-wider text-on-surface-variant block mb-2">
+                      {t('Daftar Sebagai')} <span className="text-red-500">*</span>
+                    </label>
+                    <div className="grid grid-cols-1 gap-2.5">
+                      {[
+                        {
+                          value: 'tenaga_ahli',
+                          icon: 'school',
+                          title: 'Tenaga Ahli',
+                          desc: 'Menawarkan keahlian profesional & konsultasi',
+                          color: '#8B4513',
+                          bg: '#F4E8D0',
+                        },
+                        {
+                          value: 'tenaga_teknis',
+                          icon: 'badge',
+                          title: 'Tenaga Teknis',
+                          desc: 'Menyediakan keahlian teknis & operasional proyek',
+                          color: '#0D9488',
+                          bg: '#CCFBF1',
+                        },
+                        {
+                          value: 'surveyor',
+                          icon: 'explore',
+                          title: 'Surveyor',
+                          desc: 'Menyediakan jasa survei & pemetaan lapangan',
+                          color: '#1E40AF',
+                          bg: '#DBEAFE',
+                        },
+                        {
+                          value: 'klien',
+                          icon: 'person_search',
+                          title: 'Klien',
+                          desc: 'Mencari & menggunakan layanan tenaga ahli',
+                          color: '#2E5E3B',
+                          bg: '#E3F2E7',
+                        },
+                      ].map((opt) => {
+                        const isSelected = form.role_type === opt.value;
+                        return (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => setForm({ ...form, role_type: opt.value })}
+                            className={`flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-all ${
+                              isSelected
+                                ? 'border-[#8B4513] shadow-sm'
+                                : 'border-gray-200 hover:border-gray-300'
+                            }`}
+                            style={isSelected ? { backgroundColor: opt.bg, borderColor: opt.color } : {}}
+                          >
+                            <div
+                              className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                              style={{ backgroundColor: isSelected ? opt.color : '#F3F4F6', color: isSelected ? 'white' : '#6B7280' }}
+                            >
+                              <span className="material-symbols-outlined text-[20px]">{opt.icon}</span>
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-bold text-gray-900">{opt.title}</p>
+                              <p className="text-xs text-gray-500 leading-tight">{opt.desc}</p>
+                            </div>
+                            {isSelected && (
+                              <span
+                                className="material-symbols-outlined text-[20px] ml-auto shrink-0"
+                                style={{ color: opt.color }}
+                              >
+                                check_circle
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   {/* Nama Lengkap */}
                   <div>
                     <label className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">
@@ -272,7 +393,7 @@ export default function Daftar() {
                         placeholder={t('Minimal 8 karakter')}
                         value={form.password}
                         onChange={handleChange('password')}
-                        className="w-full border border-outline-variant/50 rounded-lg px-4 py-2.5 pr-11 text-sm placeholder:text-on-surface-variant/40 focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]/30 focus:border-[#0EA5E9] transition-colors bg-white"
+                        className="w-full border border-outline-variant/50 rounded-lg px-4 py-2.5 pr-11 text-sm placeholder:text-on-surface-variant/40 focus:outline-none focus:ring-2 focus:ring-[#8B4513]/30 focus:border-[#8B4513] transition-colors bg-white"
                       />
                       <button
                         type="button"
@@ -294,7 +415,7 @@ export default function Daftar() {
                             <li
                               key={req.key}
                               className={`flex items-center gap-1 text-xs ${
-                                passed ? 'text-[#0284C7]' : 'text-on-surface-variant/50'
+                                passed ? 'text-[#6B3410]' : 'text-on-surface-variant/50'
                               }`}
                             >
                               <span className="material-symbols-outlined text-[14px]">
@@ -330,7 +451,7 @@ export default function Daftar() {
                       )}
                     {form.password_confirmation.length > 0 &&
                       form.password === form.password_confirmation && (
-                        <p className="text-xs text-[#0284C7] mt-1 flex items-center gap-1">
+                        <p className="text-xs text-[#6B3410] mt-1 flex items-center gap-1">
                           <span className="material-symbols-outlined text-[14px]">check_circle</span>
                           {t('Kata sandi cocok')}
                         </p>
@@ -342,7 +463,7 @@ export default function Daftar() {
                     type="button"
                     onClick={handleSubmit}
                     disabled={loading}
-                    className="w-full bg-[#0EA5E9] text-white py-3 px-6 rounded-lg text-sm font-bold hover:bg-[#0284C7] active:scale-[0.99] transition-all disabled:opacity-60 disabled:active:scale-100 flex items-center justify-center gap-2 mt-2"
+                    className="w-full bg-[#8B4513] text-white py-3 px-6 rounded-lg text-sm font-bold hover:bg-[#6B3410] active:scale-[0.99] transition-all disabled:opacity-60 disabled:active:scale-100 flex items-center justify-center gap-2 mt-2"
                   >
                     {loading ? (
                       <>
@@ -362,7 +483,7 @@ export default function Daftar() {
               {/* Link ke sign in */}
               <p className="text-center text-sm text-on-surface-variant mt-6">
                 {t('Sudah punya akun?')}{' '}
-                <Link to="/sign-in" className="text-[#0284C7] font-bold hover:underline">
+                <Link to="/sign-in" className="text-[#6B3410] font-bold hover:underline">
                   {t('Masuk di sini')}
                 </Link>
               </p>

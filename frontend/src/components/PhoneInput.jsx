@@ -148,7 +148,7 @@ export default function PhoneInput({
         className={`flex items-center border rounded-lg bg-white overflow-hidden transition-colors
           ${error
             ? 'border-red-400 focus-within:ring-2 focus-within:ring-red-300'
-            : 'border-outline-variant/50 focus-within:ring-2 focus-within:ring-[#0EA5E9]/30 focus-within:border-[#0EA5E9]'
+            : 'border-outline-variant/50 focus-within:ring-2 focus-within:ring-[#8B4513]/30 focus-within:border-[#8B4513]'
           }`}
       >
         {/* Country code button */}
@@ -226,14 +226,14 @@ export default function PhoneInput({
                   <button
                     type="button"
                     onClick={() => handleSelectCountry(c)}
-                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-[#E0F2FE] transition-colors text-left
-                      ${country.code === c.code ? 'bg-[#E0F2FE] font-semibold' : ''}`}
+                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-[#F5EBE1] transition-colors text-left
+                      ${country.code === c.code ? 'bg-[#F5EBE1] font-semibold' : ''}`}
                   >
                     <span className="text-base leading-none shrink-0">{c.flag}</span>
                     <span className="flex-1 truncate text-on-background">{c.name}</span>
                     <span className="text-xs font-mono text-on-surface-variant/70 shrink-0">{c.dial}</span>
                     {country.code === c.code && (
-                      <span className="material-symbols-outlined text-[14px] text-[#0EA5E9] shrink-0">check</span>
+                      <span className="material-symbols-outlined text-[14px] text-[#8B4513] shrink-0">check</span>
                     )}
                   </button>
                 </li>

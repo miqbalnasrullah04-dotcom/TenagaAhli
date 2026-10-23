@@ -126,12 +126,12 @@ export default function AdminUsers() {
     <div>
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-[#0284C7]">{t('admin.users.title', 'Manajemen Pengguna')}</h2>
+          <h2 className="text-2xl font-bold text-[#6B3410]">{t('admin.users.title', 'Manajemen Pengguna')}</h2>
           <p className="text-[#414844]/80 text-sm mt-1">{t('admin.users.subtitle', 'Kelola data seluruh akun pengguna di sistem TenagaAhli.com.')}</p>
         </div>
         <button
           onClick={openAdd}
-          className="flex items-center gap-2 bg-[#0284C7] text-white px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-[#0369A1] transition-colors"
+          className="flex items-center gap-2 bg-[#6B3410] text-white px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-[#55290A] transition-colors"
         >
           <span className="material-symbols-outlined text-[20px]">person_add</span>
           {t('admin.users.add_user', 'Tambah Pengguna')}
@@ -140,13 +140,13 @@ export default function AdminUsers() {
 
       {error && <div className="mb-4 bg-[#FFDAD6] text-[#93000A] text-sm rounded-lg p-3">{error}</div>}
 
-      <div className="bg-white rounded-xl border border-[#0284C7]/15 shadow-sm overflow-hidden">
-        <div className="p-5 border-b border-[#0284C7]/15 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="bg-white rounded-xl border border-[#6B3410]/15 shadow-sm overflow-hidden">
+        <div className="p-5 border-b border-[#6B3410]/15 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <input
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             placeholder={t('admin.users.search_placeholder', 'Cari nama atau email...')}
-            className="w-full max-w-sm px-4 py-2 text-sm border border-[#0284C7]/30 rounded-lg focus:ring-[#0284C7] focus:border-[#0284C7]"
+            className="w-full max-w-sm px-4 py-2 text-sm border border-[#6B3410]/30 rounded-lg focus:ring-[#6B3410] focus:border-[#6B3410]"
           />
           <div className="flex gap-2">
             {[
@@ -160,8 +160,8 @@ export default function AdminUsers() {
                 onClick={() => setRoleFilter(tab.id)}
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
                   roleFilter === tab.id
-                    ? 'bg-[#0284C7] text-white shadow-sm'
-                    : 'bg-[#0284C7]/5 text-[#414844] hover:bg-[#0284C7]/10'
+                    ? 'bg-[#6B3410] text-white shadow-sm'
+                    : 'bg-[#6B3410]/5 text-[#414844] hover:bg-[#6B3410]/10'
                 }`}
               >
                 {tab.label}
@@ -173,7 +173,7 @@ export default function AdminUsers() {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="bg-[#0284C7]/5 text-[#414844]">
+              <tr className="bg-[#6B3410]/5 text-[#414844]">
                 <th className="px-6 py-3">{t('admin.users.table_name', 'Nama')}</th>
                 <th className="px-6 py-3">{t('admin.users.table_email', 'Email')}</th>
                 <th className="px-6 py-3">{t('admin.users.table_role', 'Role')}</th>
@@ -183,7 +183,7 @@ export default function AdminUsers() {
                 <th className="px-6 py-3">{t('admin.users.table_actions', 'Aksi')}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#0284C7]/10">
+            <tbody className="divide-y divide-[#6B3410]/10">
               {loading ? (
                 <tr><td colSpan={7} className="px-6 py-8 text-center text-[#414844]/70">Memuat data...</td></tr>
               ) : filtered.length === 0 ? (
@@ -192,8 +192,8 @@ export default function AdminUsers() {
                 filtered.map((user) => {
                   const r = roleLabel[user.role] || roleLabel.free;
                   return (
-                    <tr key={user.id} className="hover:bg-[#0284C7]/5">
-                      <td className="px-6 py-4 font-semibold text-[#0284C7]">{user.name || '-'}</td>
+                    <tr key={user.id} className="hover:bg-[#6B3410]/5">
+                      <td className="px-6 py-4 font-semibold text-[#6B3410]">{user.name || '-'}</td>
                       <td className="px-6 py-4 text-[#414844]/80">{user.email || '-'}</td>
                       <td className="px-6 py-4">
                         <span
@@ -207,12 +207,12 @@ export default function AdminUsers() {
                         {user.is_active === false ? (
                           <span className="text-xs font-bold text-[#B3261E] bg-[#FFDAD6] px-2.5 py-1 rounded-full">Nonaktif</span>
                         ) : (
-                          <span className="text-xs font-bold text-[#0284C7] bg-[#E0F2FE] px-2.5 py-1 rounded-full">Aktif</span>
+                          <span className="text-xs font-bold text-[#6B3410] bg-[#F5EBE1] px-2.5 py-1 rounded-full">Aktif</span>
                         )}
                       </td>
                       <td className="px-6 py-4">
                         {user.email_verified_at ? (
-                          <span className="text-xs font-bold text-[#0284C7] flex items-center gap-1">
+                          <span className="text-xs font-bold text-[#6B3410] flex items-center gap-1">
                             <span className="material-symbols-outlined text-base">verified</span> Terverifikasi
                           </span>
                         ) : (
@@ -239,7 +239,7 @@ export default function AdminUsers() {
                             <button
                               onClick={() => handleVerify(user)}
                               title="Verifikasi akun"
-                              className="flex items-center gap-1 text-[#0284C7] bg-[#0284C7]/10 hover:bg-[#0284C7]/20 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-colors"
+                              className="flex items-center gap-1 text-[#6B3410] bg-[#6B3410]/10 hover:bg-[#6B3410]/20 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-colors"
                             >
                               <span className="material-symbols-outlined text-[16px]">verified</span>
                               Verifikasi
@@ -251,7 +251,7 @@ export default function AdminUsers() {
                             title={user.is_active === false ? 'Aktifkan akun' : 'Nonaktifkan akun'}
                             className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-colors ${
                               user.is_active === false
-                                ? 'text-[#0284C7] bg-[#0284C7]/10 hover:bg-[#0284C7]/20'
+                                ? 'text-[#6B3410] bg-[#6B3410]/10 hover:bg-[#6B3410]/20'
                                 : 'text-[#B3261E] bg-[#B3261E]/10 hover:bg-[#B3261E]/20'
                             }`}
                           >
@@ -284,11 +284,11 @@ export default function AdminUsers() {
       {formTarget !== null && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
-            <div className="flex items-center justify-between p-6 border-b border-[#0284C7]/15">
-              <h3 className="text-lg font-bold text-[#0284C7]">
+            <div className="flex items-center justify-between p-6 border-b border-[#6B3410]/15">
+              <h3 className="text-lg font-bold text-[#6B3410]">
                 {formTarget?.id ? 'Edit Pengguna' : 'Tambah Pengguna'}
               </h3>
-              <button onClick={closeForm} className="text-[#414844]/60 hover:text-[#0284C7] p-1.5 rounded-full hover:bg-[#F5F4EF] transition-colors">
+              <button onClick={closeForm} className="text-[#414844]/60 hover:text-[#6B3410] p-1.5 rounded-full hover:bg-[#F5F4EF] transition-colors">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -302,7 +302,7 @@ export default function AdminUsers() {
                   required
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+                  className="w-full mt-1 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
                 />
               </div>
               <div>
@@ -312,7 +312,7 @@ export default function AdminUsers() {
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+                  className="w-full mt-1 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
                 />
               </div>
               <div>
@@ -320,7 +320,7 @@ export default function AdminUsers() {
                 <select
                   value={form.role}
                   onChange={(e) => setForm({ ...form, role: e.target.value })}
-                  className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm bg-white focus:ring-[#0284C7] focus:border-[#0284C7]"
+                  className="w-full mt-1 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm bg-white focus:ring-[#6B3410] focus:border-[#6B3410]"
                 >
                   <option value="free">Free</option>
                   <option value="premium">Premium</option>
@@ -336,7 +336,7 @@ export default function AdminUsers() {
                   required={!formTarget?.id}
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="w-full mt-1 border border-[#0284C7]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#0284C7] focus:border-[#0284C7]"
+                  className="w-full mt-1 border border-[#6B3410]/30 rounded-lg px-3 py-2 text-sm focus:ring-[#6B3410] focus:border-[#6B3410]"
                 />
               </div>
 
@@ -344,7 +344,7 @@ export default function AdminUsers() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 bg-[#0284C7] text-white py-2.5 rounded-lg text-sm font-bold hover:bg-[#0369A1] disabled:opacity-60"
+                  className="flex-1 bg-[#6B3410] text-white py-2.5 rounded-lg text-sm font-bold hover:bg-[#55290A] disabled:opacity-60"
                 >
                   {saving ? 'Menyimpan...' : 'Simpan'}
                 </button>

@@ -8,7 +8,7 @@ export default defineConfig({
     proxy: {
       // Forward API calls to the Laravel backend during local development
       '/api': {
-        target: 'https://tenagaahli.latihan.co.id',
+        target: 'http://localhost:8000',
         changeOrigin: true,
       },
     },

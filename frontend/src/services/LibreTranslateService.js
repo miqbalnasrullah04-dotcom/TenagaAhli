@@ -1,4 +1,4 @@
-import BUILTIN_DICTIONARY_EN from './builtInDictionary.js';
+import BUILTIN_DICTIONARY_EN, { BUILTIN_LOWER_MAP } from './builtInDictionary.js';
 
 const DEFAULT_LIBRE_URL = 'https://libretranslate.com/translate';
 
@@ -39,9 +39,15 @@ class LibreTranslateService {
     if (!trimmed) return text;
 
     if (targetLang === 'en') {
-      // 1. Tier 1: Built-in Dictionary
+      // 1. Tier 1: Built-in Dictionary (exact match)
       if (BUILTIN_DICTIONARY_EN[trimmed]) {
         return BUILTIN_DICTIONARY_EN[trimmed];
+      }
+
+      // 1b. Tier 1b: Normalized case-insensitive match
+      const normalized = trimmed.toLowerCase().replace(/\s+/g, ' ');
+      if (BUILTIN_LOWER_MAP && BUILTIN_LOWER_MAP[normalized]) {
+        return BUILTIN_LOWER_MAP[normalized];
       }
     }
 

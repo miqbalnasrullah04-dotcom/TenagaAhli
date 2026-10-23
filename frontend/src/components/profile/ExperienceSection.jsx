@@ -41,7 +41,17 @@ export default function ExperienceSection({ items, onChange }) {
           {items.map((it) => (
             <li key={it.id} className="flex items-center justify-between bg-[#F5F4F0] rounded-lg px-4 py-2 text-sm">
               <span>
-                <strong>{it.posisi}</strong> — {it.instansi} ({it.tahun_mulai || '?'}–{it.tahun_selesai || 'sekarang'})
+                <strong>{it.posisi}</strong> — {it.instansi} ({(() => {
+                  if (it.tahun_mulai && it.tahun_selesai) {
+                    return String(it.tahun_mulai) === String(it.tahun_selesai)
+                      ? it.tahun_mulai
+                      : `${it.tahun_mulai}–${it.tahun_selesai}`;
+                  }
+                  if (it.tahun_mulai) {
+                    return `${it.tahun_mulai}–sekarang`;
+                  }
+                  return it.tahun_selesai || '?';
+                })()})
               </span>
               <button onClick={() => handleDelete(it.id)} className="text-[#B3261E] text-xs font-bold hover:underline">
                 Hapus

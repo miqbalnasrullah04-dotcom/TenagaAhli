@@ -118,7 +118,7 @@ export default function AdminReports() {
   if (loading) {
     return (
       <div className="flex items-center gap-3 text-[#5B6660] p-8">
-        <span className="w-5 h-5 rounded-full border-2 border-[#0284C7]/30 border-t-[#0284C7] animate-spin" />
+        <span className="w-5 h-5 rounded-full border-2 border-[#6B3410]/30 border-t-[#6B3410] animate-spin" />
         Memuat laporan...
       </div>
     );
@@ -128,21 +128,21 @@ export default function AdminReports() {
     <div className="space-y-6 printable-area">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 non-printable">
         <div>
-          <h2 className="text-2xl font-bold text-[#0284C7]">Laporan & Analitik</h2>
+          <h2 className="text-2xl font-bold text-[#6B3410]">Laporan & Analitik</h2>
           <p className="text-[#414844]/80 text-sm mt-1">Pantau status pendaftaran, keanggotaan premium, dan transaksi masuk.</p>
         </div>
 
         <div className="flex gap-2">
           <button
             onClick={exportPDF}
-            className="flex items-center gap-1.5 bg-white text-[#0284C7] border border-[#0284C7] px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#0284C7]/5 transition-colors"
+            className="flex items-center gap-1.5 bg-white text-[#6B3410] border border-[#6B3410] px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#6B3410]/5 transition-colors"
           >
             <span className="material-symbols-outlined text-base">picture_as_pdf</span>
             Export PDF
           </button>
           <button
             onClick={exportExcel}
-            className="flex items-center gap-1.5 bg-[#0284C7] text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#0369A1] transition-colors"
+            className="flex items-center gap-1.5 bg-[#6B3410] text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#55290A] transition-colors"
           >
             <span className="material-symbols-outlined text-base">table_view</span>
             Export Excel (CSV)
@@ -151,13 +151,13 @@ export default function AdminReports() {
       </div>
 
       {/* Tabs Menu */}
-      <div className="border-b border-[#0284C7]/15 flex gap-4 non-printable">
+      <div className="border-b border-[#6B3410]/15 flex gap-4 non-printable">
         <button
           onClick={() => setActiveTab('pendaftaran')}
           className={`pb-3 text-sm font-bold border-b-2 transition-all ${
             activeTab === 'pendaftaran'
-              ? 'border-[#0284C7] text-[#0284C7]'
-              : 'border-transparent text-[#414844]/65 hover:text-[#0284C7]'
+              ? 'border-[#6B3410] text-[#6B3410]'
+              : 'border-transparent text-[#414844]/65 hover:text-[#6B3410]'
           }`}
         >
           Laporan Pendaftaran
@@ -166,8 +166,8 @@ export default function AdminReports() {
           onClick={() => setActiveTab('pembayaran')}
           className={`pb-3 text-sm font-bold border-b-2 transition-all ${
             activeTab === 'pembayaran'
-              ? 'border-[#0284C7] text-[#0284C7]'
-              : 'border-transparent text-[#414844]/65 hover:text-[#0284C7]'
+              ? 'border-[#6B3410] text-[#6B3410]'
+              : 'border-transparent text-[#414844]/65 hover:text-[#6B3410]'
           }`}
         >
           Laporan Pembayaran
@@ -176,7 +176,7 @@ export default function AdminReports() {
 
       {/* Print-only Header */}
       <div className="hidden print-header-custom mb-6">
-        <h1 className="text-2xl font-bold text-[#0284C7] border-b pb-2">TenagaAhli.com — LAPORAN RESMI</h1>
+        <h1 className="text-2xl font-bold text-[#6B3410] border-b pb-2">TenagaAhli.com — LAPORAN RESMI</h1>
         <p className="text-xs text-gray-500 mt-1">Diunduh pada: {new Date().toLocaleString('id-ID')}</p>
         <h2 className="text-lg font-semibold mt-4">
           Laporan {activeTab === 'pendaftaran' ? 'Pendaftaran Tenaga Ahli' : 'Pembayaran Keanggotaan'}
@@ -187,33 +187,33 @@ export default function AdminReports() {
         <div className="space-y-6">
           {/* Registration Stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-white p-5 rounded-xl border border-[#0284C7]/15 shadow-sm">
+            <div className="bg-white p-5 rounded-xl border border-[#6B3410]/15 shadow-sm">
               <h4 className="text-xs text-[#414844]/80 font-semibold uppercase">Total Pendaftar</h4>
               <p className="text-2xl font-bold text-[#1F2A22] mt-1">{stats.pendaftaran.total}</p>
             </div>
-            <div className="bg-white p-5 rounded-xl border border-[#0284C7]/15 shadow-sm">
+            <div className="bg-white p-5 rounded-xl border border-[#6B3410]/15 shadow-sm">
               <h4 className="text-xs text-[#414844]/80 font-semibold uppercase">Menunggu Verifikasi</h4>
               <p className="text-2xl font-bold text-[#7A5900] mt-1">{stats.pendaftaran.menunggu}</p>
             </div>
-            <div className="bg-white p-5 rounded-xl border border-[#0284C7]/15 shadow-sm">
+            <div className="bg-white p-5 rounded-xl border border-[#6B3410]/15 shadow-sm">
               <h4 className="text-xs text-[#414844]/80 font-semibold uppercase">Aktif / Disetujui</h4>
-              <p className="text-2xl font-bold text-[#0284C7] mt-1">{stats.pendaftaran.aktif}</p>
+              <p className="text-2xl font-bold text-[#6B3410] mt-1">{stats.pendaftaran.aktif}</p>
             </div>
-            <div className="bg-white p-5 rounded-xl border border-[#0284C7]/15 shadow-sm">
+            <div className="bg-white p-5 rounded-xl border border-[#6B3410]/15 shadow-sm">
               <h4 className="text-xs text-[#414844]/80 font-semibold uppercase">Ditolak</h4>
               <p className="text-2xl font-bold text-[#B3261E] mt-1">{stats.pendaftaran.ditolak}</p>
             </div>
           </div>
 
           {/* Registration List */}
-          <div className="bg-white rounded-xl border border-[#0284C7]/15 shadow-sm overflow-hidden">
-            <div className="p-5 border-b border-[#0284C7]/15">
-              <h3 className="font-bold text-[#0284C7] text-sm">Daftar Pendaftar Terdaftar</h3>
+          <div className="bg-white rounded-xl border border-[#6B3410]/15 shadow-sm overflow-hidden">
+            <div className="p-5 border-b border-[#6B3410]/15">
+              <h3 className="font-bold text-[#6B3410] text-sm">Daftar Pendaftar Terdaftar</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
-                  <tr className="bg-[#0284C7]/5 text-[#414844]">
+                  <tr className="bg-[#6B3410]/5 text-[#414844]">
                     <th className="px-6 py-3">Nama</th>
                     <th className="px-6 py-3">Email</th>
                     <th className="px-6 py-3">Instansi</th>
@@ -222,16 +222,16 @@ export default function AdminReports() {
                     <th className="px-6 py-3">Tanggal Terdaftar</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#0284C7]/10">
+                <tbody className="divide-y divide-[#6B3410]/10">
                   {experts.map((e) => (
-                    <tr key={e.id} className="hover:bg-[#0284C7]/5">
-                      <td className="px-6 py-4 font-semibold text-[#0284C7]">{e.name}</td>
+                    <tr key={e.id} className="hover:bg-[#6B3410]/5">
+                      <td className="px-6 py-4 font-semibold text-[#6B3410]">{e.name}</td>
                       <td className="px-6 py-4 text-[#414844]/80">{e.user?.email || e.email}</td>
                       <td className="px-6 py-4 text-[#414844]/80">{e.institution || '-'}</td>
                       <td className="px-6 py-4 text-[#414844]/80">{e.field || '-'}</td>
                       <td className="px-6 py-4">
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          e.profile_status === 'aktif' ? 'bg-[#E0F2FE] text-[#0284C7]' :
+                          e.profile_status === 'aktif' ? 'bg-[#F5EBE1] text-[#6B3410]' :
                           e.profile_status === 'menunggu_verifikasi' ? 'bg-[#FFF4D6] text-[#7A5900]' :
                           e.profile_status === 'ditolak' ? 'bg-[#FFDAD6] text-[#B3261E]' : 'bg-gray-100 text-gray-500'
                         }`}>
@@ -254,33 +254,33 @@ export default function AdminReports() {
         <div className="space-y-6">
           {/* Payment Stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-white p-5 rounded-xl border border-[#0284C7]/15 shadow-sm">
+            <div className="bg-white p-5 rounded-xl border border-[#6B3410]/15 shadow-sm">
               <h4 className="text-xs text-[#414844]/80 font-semibold uppercase">Total Pendapatan Bersih</h4>
-              <p className="text-2xl font-bold text-[#0284C7] mt-1">{formatRupiah(stats.pembayaran.amount)}</p>
+              <p className="text-2xl font-bold text-[#6B3410] mt-1">{formatRupiah(stats.pembayaran.amount)}</p>
             </div>
-            <div className="bg-white p-5 rounded-xl border border-[#0284C7]/15 shadow-sm">
+            <div className="bg-white p-5 rounded-xl border border-[#6B3410]/15 shadow-sm">
               <h4 className="text-xs text-[#414844]/80 font-semibold uppercase">Transaksi Berhasil</h4>
               <p className="text-2xl font-bold text-[#1F2A22] mt-1">{stats.pembayaran.total}</p>
             </div>
-            <div className="bg-white p-5 rounded-xl border border-[#0284C7]/15 shadow-sm">
+            <div className="bg-white p-5 rounded-xl border border-[#6B3410]/15 shadow-sm">
               <h4 className="text-xs text-[#414844]/80 font-semibold uppercase">Transaksi Tertunda</h4>
               <p className="text-2xl font-bold text-[#7A5900] mt-1">{stats.pembayaran.pending}</p>
             </div>
-            <div className="bg-white p-5 rounded-xl border border-[#0284C7]/15 shadow-sm">
+            <div className="bg-white p-5 rounded-xl border border-[#6B3410]/15 shadow-sm">
               <h4 className="text-xs text-[#414844]/80 font-semibold uppercase">Nominal Tertunda</h4>
               <p className="text-2xl font-bold text-[#414844]/65 mt-1">{formatRupiah(stats.pembayaran.pendingAmount)}</p>
             </div>
           </div>
 
           {/* Payment List */}
-          <div className="bg-white rounded-xl border border-[#0284C7]/15 shadow-sm overflow-hidden">
-            <div className="p-5 border-b border-[#0284C7]/15">
-              <h3 className="font-bold text-[#0284C7] text-sm">Daftar Riwayat Transaksi Premium</h3>
+          <div className="bg-white rounded-xl border border-[#6B3410]/15 shadow-sm overflow-hidden">
+            <div className="p-5 border-b border-[#6B3410]/15">
+              <h3 className="font-bold text-[#6B3410] text-sm">Daftar Riwayat Transaksi Premium</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
-                  <tr className="bg-[#0284C7]/5 text-[#414844]">
+                  <tr className="bg-[#6B3410]/5 text-[#414844]">
                     <th className="px-6 py-3">Ref Code</th>
                     <th className="px-6 py-3">Pendaftar</th>
                     <th className="px-6 py-3">Nama Paket</th>
@@ -289,18 +289,18 @@ export default function AdminReports() {
                     <th className="px-6 py-3">Tanggal Transaksi</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#0284C7]/10">
+                <tbody className="divide-y divide-[#6B3410]/10">
                   {orders.map((o) => (
-                    <tr key={o.id} className="hover:bg-[#0284C7]/5">
+                    <tr key={o.id} className="hover:bg-[#6B3410]/5">
                       <td className="px-6 py-4 font-mono text-xs font-semibold">{o.reference_code}</td>
                       <td className="px-6 py-4">
                         <span className="font-semibold">{o.user?.name || '-'}</span>
                       </td>
                       <td className="px-6 py-4">{o.package_name || 'Premium'}</td>
-                      <td className="px-6 py-4 font-bold text-[#0284C7]">{formatRupiah(o.amount)}</td>
+                      <td className="px-6 py-4 font-bold text-[#6B3410]">{formatRupiah(o.amount)}</td>
                       <td className="px-6 py-4">
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          o.status === 'verified' ? 'bg-[#E0F2FE] text-[#0284C7]' :
+                          o.status === 'verified' ? 'bg-[#F5EBE1] text-[#6B3410]' :
                           o.status === 'menunggu_verifikasi' ? 'bg-[#FFF4D6] text-[#7A5900]' :
                           o.status === 'rejected' ? 'bg-[#FFDAD6] text-[#B3261E]' : 'bg-gray-100 text-gray-500'
                         }`}>

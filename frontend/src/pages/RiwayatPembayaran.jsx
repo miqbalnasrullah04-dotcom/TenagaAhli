@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../api/client.js';
 import DashboardLayout from '../components/DashboardLayout.jsx';
+import qrisImg from '../assets/qris.png';
 
 const STATUS_INFO = {
   lunas: { text: 'Lunas', color: '#2E5E3B', bg: '#E3F2E7' },
@@ -39,6 +40,9 @@ export default function RiwayatPembayaran() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
+  const [purchases, setPurchases] = useState([]);
+  const [loadingPurchases, setLoadingPurchases] = useState(false);
+
   useEffect(() => {
     // Muat Riwayat
     api
@@ -50,6 +54,17 @@ export default function RiwayatPembayaran() {
       .catch(() => setPayments([]))
       .finally(() => setLoading(false));
 
+    // Muat Pembelian Produk
+    setLoadingPurchases(true);
+    api
+      .get('/my/purchases')
+      .then((res) => {
+        const data = Array.isArray(res.data) ? res.data : [];
+        setPurchases(data);
+      })
+      .catch(() => setPurchases([]))
+      .finally(() => setLoadingPurchases(false));
+
     // Cek Tagihan
     if (!pkg) {
       api
@@ -60,6 +75,32 @@ export default function RiwayatPembayaran() {
         .catch(() => {});
     }
   }, [pkg]);
+
+  const handleDownloadProduct = async (p) => {
+    const prodId = p.product_id || p.product?.id;
+    if (p.product?.download_url && !p.product?.file_url) {
+      window.open(p.product.download_url, '_blank');
+      return;
+    }
+    try {
+      const res = await api.get(`/products/${prodId}/download`, { responseType: 'blob' });
+      const blob = new Blob([res.data]);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${p.product_title || 'produk'}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      if (p.product?.download_url) {
+        window.open(p.product.download_url, '_blank');
+      } else {
+        alert('Gagal mengunduh berkas produk. Silakan coba lagi.');
+      }
+    }
+  };
 
   const handleProofChange = (e) => {
     const file = e.target.files?.[0];
@@ -103,13 +144,13 @@ export default function RiwayatPembayaran() {
 
   return (
     <DashboardLayout
-      title="Manajemen Pembayaran"
-      subtitle="Kelola tagihan langganan paket dan lihat histori transaksi Anda."
+      title="Manajemen Pembayaran & Produk"
+      subtitle="Kelola tagihan langganan paket, riwayat transaksi, dan berkas produk digital Anda."
     >
       <div className="w-full max-w-3xl">
         
         {/* Tabs Menu */}
-        <div className="flex border-b border-outline-variant/30 mb-6 gap-2">
+        <div className="flex border-b border-outline-variant/30 mb-6 gap-2 flex-wrap">
           <button
             onClick={() => { setActiveTab('riwayat'); setSuccess(false); }}
             className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
@@ -118,6 +159,20 @@ export default function RiwayatPembayaran() {
           >
             <span className="material-symbols-outlined text-[18px]">receipt_long</span>
             Riwayat Pembayaran
+          </button>
+          <button
+            onClick={() => { setActiveTab('produk'); setSuccess(false); }}
+            className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+              activeTab === 'produk' ? 'border-[#2E5E3B] text-[#2E5E3B]' : 'border-transparent text-on-surface-variant hover:text-[#2E5E3B]'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[18px]">inventory_2</span>
+            Produk Dibeli & Unduhan
+            {purchases.length > 0 && (
+              <span className="ml-1 bg-[#2E5E3B]/10 text-[#2E5E3B] text-[10px] font-bold px-2 py-0.5 rounded-full">
+                {purchases.length}
+              </span>
+            )}
           </button>
           <button
             onClick={() => setActiveTab('tagihan')}
@@ -135,11 +190,11 @@ export default function RiwayatPembayaran() {
           <div className="animate-fadeIn">
             <div className="flex justify-end mb-4">
               <button
-                onClick={() => navigate('/paket')}
+                onClick={() => navigate('/top-up')}
                 className="bg-[#2E5E3B] text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-[#244B2F] transition-colors flex items-center gap-1.5"
               >
-                <span className="material-symbols-outlined text-[18px]">add</span>
-                Bayar Paket Baru
+                <span className="material-symbols-outlined text-[18px]">add_circle</span>
+                Top Up Point
               </button>
             </div>
 
@@ -155,10 +210,10 @@ export default function RiwayatPembayaran() {
                 <span className="material-symbols-outlined text-4xl text-on-surface-variant/40 mb-2 block">receipt_long</span>
                 <p className="text-on-surface-variant text-sm mb-4">Belum ada riwayat transaksi.</p>
                 <button
-                  onClick={() => navigate('/paket')}
+                  onClick={() => navigate('/top-up')}
                   className="bg-[#2E5E3B] text-white py-2 px-5 rounded-lg font-bold text-sm hover:bg-[#244B2F] transition-colors"
                 >
-                  Lihat Pilihan Paket
+                  Top Up Point
                 </button>
               </div>
             )}
@@ -195,6 +250,97 @@ export default function RiwayatPembayaran() {
           </div>
         )}
 
+        {/* CONTENT: PRODUK DIBELI & UNDUHAN */}
+        {activeTab === 'produk' && (
+          <div className="animate-fadeIn space-y-4">
+            {loadingPurchases && (
+              <div className="flex items-center gap-3 text-[#5B6660] text-sm">
+                <span className="w-5 h-5 rounded-full border-2 border-[#2E5E3B]/30 border-t-[#2E5E3B] animate-spin" />
+                Memuat daftar produk yang Anda beli...
+              </div>
+            )}
+
+            {!loadingPurchases && purchases.length === 0 && (
+              <div className="bg-white rounded-xl border border-outline-variant/30 shadow-sm p-10 text-center">
+                <span className="material-symbols-outlined text-4xl text-on-surface-variant/40 mb-2 block">folder_off</span>
+                <p className="text-on-surface-variant text-sm mb-4">Anda belum membeli produk apapun.</p>
+                <button
+                  onClick={() => navigate('/cari')}
+                  className="bg-[#2E5E3B] text-white py-2 px-5 rounded-lg font-bold text-sm hover:bg-[#244B2F] transition-colors"
+                >
+                  Jelajahi Produk
+                </button>
+              </div>
+            )}
+
+            {!loadingPurchases && purchases.length > 0 && (
+              <div className="flex flex-col gap-3">
+                {purchases.map((p) => {
+                  const isCompleted = p.status === 'completed';
+                  const isDigital = p.product?.is_digital ?? true;
+                  return (
+                    <div
+                      key={p.id}
+                      className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                    >
+                      <div className="flex items-start gap-3.5">
+                        <div className="w-12 h-12 rounded-xl bg-[#008A62]/10 text-[#008A62] flex items-center justify-center shrink-0">
+                          <span className="material-symbols-outlined text-[24px]">
+                            {isDigital ? 'devices' : 'local_shipping'}
+                          </span>
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2 flex-wrap mb-1">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-gray-100 text-gray-700">
+                              {p.reference_code}
+                            </span>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+                              isCompleted ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'
+                            }`}>
+                              {isCompleted ? 'Berhasil' : p.status}
+                            </span>
+                            <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md">
+                              {isDigital ? 'Produk Digital' : 'Produk Fisik'}
+                            </span>
+                          </div>
+                          <h4 className="font-bold text-gray-900 text-sm sm:text-base leading-snug">
+                            {p.product_title || p.product?.title}
+                          </h4>
+                          <p className="text-xs text-gray-500 mt-0.5">
+                            Dibeli pada {new Date(p.purchased_at || p.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                            {p.amount_idr ? ` • ${formatRupiah(p.amount_idr)}` : (p.points_spent ? ` • ${p.points_spent} Point` : '')}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="w-full sm:w-auto flex items-center gap-2 shrink-0">
+                        {isDigital && isCompleted && (
+                          <button
+                            type="button"
+                            onClick={() => handleDownloadProduct(p)}
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#008A62] hover:bg-[#00704F] text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer"
+                          >
+                            <span className="material-symbols-outlined text-[16px]">download</span>
+                            Unduh / Akses
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => navigate(`/produk/${p.product_id || p.product?.id}`)}
+                          className="w-full sm:w-auto inline-flex items-center justify-center gap-1 px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition-all"
+                        >
+                          <span>Lihat Detail</span>
+                          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* CONTENT: TAGIHAN & BAYAR */}
         {activeTab === 'tagihan' && (
           <div className="animate-fadeIn">
@@ -216,13 +362,13 @@ export default function RiwayatPembayaran() {
               </div>
             ) : !pkg ? (
               <div className="bg-white rounded-xl border border-outline-variant/30 shadow-sm p-10 text-center">
-                <span className="material-symbols-outlined text-4xl text-on-surface-variant/40 mb-2 block">workspace_premium</span>
-                <p className="text-on-surface-variant text-sm mb-4">Anda belum memiliki tagihan aktif atau belum memilih paket.</p>
+                <span className="material-symbols-outlined text-4xl text-on-surface-variant/40 mb-2 block">toll</span>
+                <p className="text-on-surface-variant text-sm mb-4">Anda belum memiliki saldo Point. Top Up sekarang untuk mulai.</p>
                 <button
-                  onClick={() => navigate('/paket')}
+                  onClick={() => navigate('/top-up')}
                   className="bg-[#2E5E3B] text-white py-2.5 px-6 rounded-lg font-bold text-sm hover:bg-[#244B2F] transition-colors"
                 >
-                  Pilih Paket Sekarang
+                  Top Up Point Sekarang
                 </button>
               </div>
             ) : (
@@ -270,18 +416,30 @@ export default function RiwayatPembayaran() {
 
                   {method === 'transfer_bank' && (
                     <div className="mt-4 bg-[#F5F4F0] rounded-lg p-4 text-sm text-on-surface-variant">
-                      Transfer ke rekening <b>BCA 123-456-7890 a.n. AMDAL.ID</b>, lalu unggah bukti transfer di bawah ini.
+                      Transfer ke rekening <b>BCA 0954152045 a.n. Triwala Mitra Bestari</b>, lalu unggah bukti transfer di bawah ini.
                     </div>
                   )}
                   {method === 'qris' && (
-                    <div className="mt-4 bg-[#F5F4F0] rounded-lg p-4 text-sm text-on-surface-variant flex items-center gap-3">
-                      <span className="material-symbols-outlined text-3xl text-[#2E5E3B]">qr_code_2</span>
-                      Kode QRIS akan dikirimkan ke email Anda atau dapat diunduh setelah konfirmasi.
+                    <div className="mt-4 bg-gradient-to-b from-[#F0F9FF] to-white border border-blue-200 rounded-2xl p-4 text-center">
+                      <div className="max-w-[220px] mx-auto bg-white p-2 rounded-xl border border-blue-200 shadow-sm mb-2">
+                        <img src={qrisImg} alt="QRIS Triwala Digital" className="w-full h-auto rounded-lg object-contain mx-auto" />
+                      </div>
+                      <p className="text-xs font-bold text-gray-900 mb-0.5">TRIWALA DIGITAL, DIGITAL & KREATIF</p>
+                      <p className="text-[11px] font-mono text-blue-900 mb-2">NMID: ID1026596867808</p>
+                      <div className="flex justify-center">
+                        <a
+                          href={qrisImg}
+                          download="QRIS_TenagaAhli.png"
+                          className="inline-flex items-center gap-1 px-3 py-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg text-xs font-semibold shadow-xs"
+                        >
+                          <span className="material-symbols-outlined text-[14px]">download</span> Unduh QRIS
+                        </a>
+                      </div>
                     </div>
                   )}
                   {method === 'e_wallet' && (
                     <div className="mt-4 bg-[#F5F4F0] rounded-lg p-4 text-sm text-on-surface-variant">
-                      Kirim pembayaran ke nomor <b>0812-3456-7890 (AMDAL.ID)</b> melalui GoPay/OVO/DANA, lalu unggah bukti transfer.
+                      Kirim pembayaran ke nomor <b>0812-3456-7890 (a.n. Triwala Mitra Bestari)</b> melalui GoPay/OVO/DANA, lalu unggah bukti transfer.
                     </div>
                   )}
                 </div>

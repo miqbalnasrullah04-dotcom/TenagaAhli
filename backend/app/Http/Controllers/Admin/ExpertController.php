@@ -13,11 +13,79 @@ class ExpertController extends Controller
      * Tampilan untuk Admin (Data Mentah JSON)
      * Mengatasi error "Gagal memuat data dari server" pada tabel frontend
      */
-    public function adminIndex()
+    public function adminIndex(Request $request)
     {
         try {
-            // Mengambil semua data tenaga ahli terbaru dalam bentuk JSON
-            $experts = Expert::latest()->get();
+            $query = Expert::with(['user', 'educations', 'experiences', 'certificates', 'documents']);
+
+            if ($request->input('role_type') === 'surveyor' || $request->boolean('only_surveyor')) {
+                $query->where(function ($q) {
+                    $q->whereHas('user', function ($uq) {
+                        $uq->where('role_type', 'surveyor');
+                    })
+                    ->orWhere('kriteria', 'LIKE', '%Surveyor%')
+                    ->orWhere('kriteria_list', 'LIKE', '%Surveyor%')
+                    ->orWhere('field', 'LIKE', '%Surveyor%');
+                });
+            } elseif ($request->input('role_type') === 'tenaga_teknis' || $request->boolean('only_tenaga_teknis')) {
+                $query->where(function ($q) {
+                    $q->whereHas('user', function ($uq) {
+                        $uq->where('role_type', 'tenaga_teknis');
+                    })
+                    ->orWhere('kriteria', 'LIKE', '%Tenaga Teknis%')
+                    ->orWhere('kriteria_list', 'LIKE', '%Tenaga Teknis%')
+                    ->orWhere('field', 'LIKE', '%Tenaga Teknis%');
+                });
+            } elseif ($request->input('role_type') === 'tenaga_ahli' || $request->boolean('only_tenaga_ahli')) {
+                $query->where(function ($q) {
+                    $q->whereHas('user', function ($uq) {
+                        $uq->where('role_type', 'tenaga_ahli');
+                    })
+                    ->orWhere('kriteria', 'LIKE', '%Tenaga Ahli%')
+                    ->orWhere('kriteria_list', 'LIKE', '%Tenaga Ahli%')
+                    ->orWhere(function ($sub) {
+                        $sub->where(function ($uq) {
+                            $uq->whereHas('user', function ($u) {
+                                $u->whereNotIn('role_type', ['surveyor', 'tenaga_teknis']);
+                            })->orWhereDoesntHave('user');
+                        })->where('kriteria', 'NOT LIKE', '%Surveyor%')
+                          ->where('kriteria', 'NOT LIKE', '%Tenaga Teknis%')
+                          ->where(function ($kq) {
+                              $kq->whereNull('kriteria_list')
+                                 ->orWhere('kriteria_list', '[]')
+                                 ->orWhere(function ($nkq) {
+                                     $nkq->where('kriteria_list', 'NOT LIKE', '%Surveyor%')
+                                         ->where('kriteria_list', 'NOT LIKE', '%Tenaga Teknis%');
+                                 });
+                          });
+                    });
+                });
+            } else {
+                $query->where(function ($q) {
+                    $q->where('kriteria', 'LIKE', '%Tenaga Ahli%')
+                      ->orWhere('kriteria_list', 'LIKE', '%Tenaga Ahli%')
+                      ->orWhereHas('user', function ($uq) {
+                          $uq->where('role_type', 'tenaga_ahli');
+                      })
+                      ->orWhere(function ($sub) {
+                          $sub->where(function ($uq) {
+                              $uq->whereHas('user', function ($u) {
+                                  $u->where('role_type', '!=', 'surveyor');
+                              })->orWhereDoesntHave('user');
+                          });
+                          $sub->where('kriteria', 'NOT LIKE', '%Surveyor%')
+                              ->where(function ($kq) {
+                                  $kq->whereNull('kriteria_list')
+                                     ->orWhere('kriteria_list', '[]')
+                                     ->orWhere('kriteria_list', 'NOT LIKE', '%Surveyor%');
+                              })
+                              ->where('field', 'NOT LIKE', '%Surveyor%');
+                      });
+                });
+            }
+
+            $experts = $query->latest()->get();
+
             return response()->json($experts, 200);
         } catch (\Exception $e) {
             return response()->json([

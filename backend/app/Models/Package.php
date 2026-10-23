@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Package extends Model
 {
-    protected $fillable = ['name', 'slug', 'price', 'description', 'benefits', 'is_active', 'order'];
+    protected $fillable = ['name', 'slug', 'price', 'role_type', 'description', 'benefits', 'is_active', 'order'];
 
     protected $casts = [
         'benefits' => 'array',

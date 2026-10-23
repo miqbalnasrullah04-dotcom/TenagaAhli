@@ -17,33 +17,59 @@ class FileController extends Controller
      */
     public function view(Request $request, $path)
     {
-        // Reconstruct full path from URL segments
-        $fullPath = $path;
+        // Reconstruct full path from URL segments and strip any leading 'storage/' or 'public/'
+        $fullPath = ltrim($path, '/');
+        $fullPath = preg_replace('#^storage/#i', '', $fullPath);
+        $fullPath = preg_replace('#^public/#i', '', $fullPath);
+        $fullPath = urldecode($fullPath);
 
-        // Get additional segments if nested path
-        if ($request->route()->parameters()) {
-            $segments = array_slice($request->route()->parameters(), 1);
-            if (!empty($segments)) {
-                $fullPath = implode('/', $segments);
-            }
-        }
+        $disk = 'public';
 
         // Check if file exists in public disk
         if (!Storage::disk('public')->exists($fullPath)) {
-            return response()->json(['message' => 'File tidak ditemukan'], 404);
+            if (Storage::disk('local')->exists($fullPath)) {
+                $disk = 'local';
+            } elseif (Storage::disk('public')->exists('sertifikat/' . basename($fullPath))) {
+                $fullPath = 'sertifikat/' . basename($fullPath);
+            } elseif (Storage::disk('public')->exists('dokumen/' . basename($fullPath))) {
+                $fullPath = 'dokumen/' . basename($fullPath);
+            } elseif (Storage::disk('public')->exists('experts/photos/' . basename($fullPath))) {
+                $fullPath = 'experts/photos/' . basename($fullPath);
+            } elseif (Storage::disk('public')->exists('experts/covers/' . basename($fullPath))) {
+                $fullPath = 'experts/covers/' . basename($fullPath);
+            } else {
+                // Direct file_exists check in storage/app/public
+                $directPath = storage_path('app/public/' . $fullPath);
+                if (file_exists($directPath) && !is_dir($directPath)) {
+                    $disposition = $request->query('download') === '1' ? 'attachment' : 'inline';
+                    return response()->file($directPath, [
+                        'Content-Disposition' => $disposition . '; filename="' . basename($directPath) . '"',
+                        'Cache-Control' => 'public, max-age=86400',
+                    ]);
+                }
+                return response()->json(['message' => 'File tidak ditemukan'], 404);
+            }
         }
 
-        // Get file contents
-        $file = Storage::disk('public')->get($fullPath);
-        $mimeType = Storage::disk('public')->mimeType($fullPath);
-        $fileName = basename($fullPath);
+        $realPath = Storage::disk($disk)->path($fullPath);
+        if (file_exists($realPath) && !is_dir($realPath)) {
+            $disposition = $request->query('download') === '1' ? 'attachment' : 'inline';
+            return response()->file($realPath, [
+                'Content-Disposition' => $disposition . '; filename="' . basename($realPath) . '"',
+                'Cache-Control' => 'public, max-age=86400',
+            ]);
+        }
 
-        // Determine if should display inline or force download
+        // Fallback for cloud/virtual drivers
+        $file = Storage::disk($disk)->get($fullPath);
+        $mimeType = Storage::disk($disk)->mimeType($fullPath) ?: 'application/octet-stream';
+        $fileName = basename($fullPath);
         $disposition = $request->query('download') === '1' ? 'attachment' : 'inline';
 
         return response($file, 200)
             ->header('Content-Type', $mimeType)
-            ->header('Content-Disposition', $disposition . '; filename="' . $fileName . '"');
+            ->header('Content-Disposition', $disposition . '; filename="' . $fileName . '"')
+            ->header('Cache-Control', 'public, max-age=86400');
     }
 
     /**

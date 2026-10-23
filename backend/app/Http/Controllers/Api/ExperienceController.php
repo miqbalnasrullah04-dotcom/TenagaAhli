@@ -24,13 +24,13 @@ class ExperienceController extends Controller
         $validator = Validator::make($request->all(), [
             'posisi' => ['required', 'string', 'max:255'],
             'instansi' => ['required', 'string', 'max:255'],
-            'tahun_mulai' => ['nullable', 'integer', 'min:1950', 'max:'.(date('Y') + 1)],
-            'tahun_selesai' => ['nullable', 'integer', 'min:1950', 'max:'.(date('Y') + 1)],
+            'tahun_mulai' => ['nullable', 'numeric', 'min:1950', 'max:'.(date('Y') + 10)],
+            'tahun_selesai' => ['nullable', 'numeric', 'min:1950', 'max:'.(date('Y') + 10)],
             'deskripsi' => ['nullable', 'string'],
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->first()], 422);
+            return response()->json(['message' => $validator->errors()->first(), 'errors' => $validator->errors()], 422);
         }
 
         $data = $validator->validated();
@@ -53,13 +53,13 @@ class ExperienceController extends Controller
         $validator = Validator::make($request->all(), [
             'posisi' => ['required', 'string', 'max:255'],
             'instansi' => ['required', 'string', 'max:255'],
-            'tahun_mulai' => ['nullable', 'integer', 'min:1950', 'max:'.(date('Y') + 1)],
-            'tahun_selesai' => ['nullable', 'integer', 'min:1950', 'max:'.(date('Y') + 1)],
+            'tahun_mulai' => ['nullable', 'numeric', 'min:1950', 'max:'.(date('Y') + 10)],
+            'tahun_selesai' => ['nullable', 'numeric', 'min:1950', 'max:'.(date('Y') + 10)],
             'deskripsi' => ['nullable', 'string'],
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->first()], 422);
+            return response()->json(['message' => $validator->errors()->first(), 'errors' => $validator->errors()], 422);
         }
 
         $experience->update($validator->validated());
@@ -73,5 +73,26 @@ class ExperienceController extends Controller
         Experience::where('expert_id', $expert->id)->findOrFail($id)->delete();
 
         return response()->json(['message' => 'Pengalaman berhasil dihapus']);
+    }
+
+    public function setPrimary(Request $request, $id)
+    {
+        $expert = Expert::where('user_id', $request->user()->id)->firstOrFail();
+        $experience = Experience::where('expert_id', $expert->id)->findOrFail($id);
+
+        $newPrimary = !$experience->is_primary;
+
+        // Reset semua pengalaman kerja milik ahli ini menjadi false
+        Experience::where('expert_id', $expert->id)->update(['is_primary' => false]);
+
+        if ($newPrimary) {
+            $experience->update(['is_primary' => true]);
+        }
+
+        return response()->json([
+            'message' => $newPrimary ? 'Pekerjaan berhasil dijadikan yang tampil di Card.' : 'Pekerjaan utama dinonaktifkan.',
+            'experience' => $experience->fresh(),
+            'experiences' => Experience::where('expert_id', $expert->id)->get(),
+        ]);
     }
 }

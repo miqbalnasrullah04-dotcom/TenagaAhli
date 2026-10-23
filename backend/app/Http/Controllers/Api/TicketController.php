@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\TicketCreatedAdmin;
+use App\Mail\TicketCreatedUser;
+use App\Mail\TicketReplyNotification;
 use App\Models\Ticket;
 use App\Models\TicketReply;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class TicketController extends Controller
@@ -51,6 +55,28 @@ class TicketController extends Controller
 
         $ticket->load(['user:id,name,email', 'replies']);
 
+        $user = $request->user();
+        $frontendUrl = rtrim(config('app.frontend_url', config('app.url')), '/');
+        $ticketUrl = $frontendUrl . '/bantuan';
+        $adminTicketUrl = $frontendUrl . '/admin/tickets';
+
+        // 1. Email konfirmasi ke Pengguna
+        if ($user && $user->email) {
+            try {
+                Mail::to($user->email)->send(new TicketCreatedUser($ticket, $user, $ticketUrl));
+            } catch (\Throwable $e) {
+                \Log::warning('Gagal kirim email TicketCreatedUser: ' . $e->getMessage());
+            }
+        }
+
+        // 2. Email notifikasi ke Admin / Support Team
+        $adminEmail = config('mail.from.address', 'admin@tenagaahli.com');
+        try {
+            Mail::to($adminEmail)->send(new TicketCreatedAdmin($ticket, $user, $adminTicketUrl));
+        } catch (\Throwable $e) {
+            \Log::warning('Gagal kirim email TicketCreatedAdmin: ' . $e->getMessage());
+        }
+
         return response()->json($ticket, 201);
     }
 
@@ -93,6 +119,18 @@ class TicketController extends Controller
         // Update ticket status to diproses if it was baru
         if ($ticket->status === 'baru') {
             $ticket->update(['status' => 'diproses']);
+        }
+
+        // Notifikasi email balasan pengguna ke Admin
+        $user = $request->user();
+        $frontendUrl = rtrim(config('app.frontend_url', config('app.url')), '/');
+        $adminTicketUrl = $frontendUrl . '/admin/tickets';
+        $adminEmail = config('mail.from.address', 'admin@tenagaahli.com');
+
+        try {
+            Mail::to($adminEmail)->send(new TicketReplyNotification($ticket, $reply, $user, 'admin', $adminTicketUrl));
+        } catch (\Throwable $e) {
+            \Log::warning('Gagal kirim email TicketReplyNotification ke Admin: ' . $e->getMessage());
         }
 
         return response()->json($reply, 201);

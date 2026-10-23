@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use App\Models\MembershipTransaction;
 use App\Models\PointTransaction;
+use App\Models\Package;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -16,60 +17,37 @@ class MembershipService
     const PREMIUM_DURATION_MONTHS = 12; // Durasi premium dalam bulan
 
     /**
-     * Calculate level from points (static method untuk consistency)
-     */
-    private function calculateLevelFromPoints(int $points): string
-    {
-        if ($points >= 2000) {
-            return 'platinum';
-        } elseif ($points >= 1000) {
-            return 'gold';
-        } elseif ($points >= 500) {
-            return 'silver';
-        } else {
-            return 'basic';
-        }
-    }
-
-    /**
      * Get membership status for user
      */
     public function getMembershipStatus(User $user): array
     {
-        $nextLevelInfo = $user->getNextLevelInfo();
-
         return [
-            'package' => $user->package,
-            'is_premium' => $user->isPremium(),
-            'premium_started_at' => $user->premium_started_at,
-            'premium_expires_at' => $user->premium_expires_at,
-            'remaining_days' => $user->getPremiumRemainingDays(),
-            'points' => $user->points,
-            'membership_level' => $user->membership_level,
-            'level_display_name' => $user->getLevelDisplayName(),
-            'level_badge_color' => $user->getLevelBadgeColor(),
-            'discount_percentage' => $user->getDiscountPercentage(),
-            'next_level' => $nextLevelInfo['next_level'],
-            'points_needed' => $nextLevelInfo['points_needed'],
-            'progress_percentage' => $nextLevelInfo['progress_percentage'],
+            'package'             => $user->package,
+            'is_premium'          => $user->isPremium(),
+            'premium_started_at'  => $user->premium_started_at,
+            'premium_expires_at'  => $user->premium_expires_at,
+            'remaining_days'      => $user->getPremiumRemainingDays(),
+            'points'              => $user->points,
+            'point_balance'       => (int) $user->point_balance,
+            'level_display_name'  => $user->getLevelDisplayName(),
+            'level_badge_color'   => $user->getLevelBadgeColor(),
+            'discount_percentage' => 0,
         ];
     }
 
     /**
-     * Calculate premium price with discount
+     * Calculate premium price
      */
     public function calculatePremiumPrice(User $user): array
     {
         $originalPrice = self::PREMIUM_PRICE;
-        $discountPercentage = $user->getDiscountPercentage();
-        $discountAmount = $originalPrice * ($discountPercentage / 100);
-        $totalPrice = $originalPrice - $discountAmount;
+        $totalPrice = $originalPrice;
 
         return [
-            'original_price' => $originalPrice,
-            'discount_percentage' => $discountPercentage,
-            'discount_amount' => $discountAmount,
-            'total_price' => $totalPrice,
+            'original_price'      => $originalPrice,
+            'discount_percentage' => 0,
+            'discount_amount'     => 0,
+            'total_price'         => $totalPrice,
         ];
     }
 
@@ -94,7 +72,7 @@ class MembershipService
                 'package' => 'premium',
                 'type' => 'upgrade',
                 'price' => $pricing['original_price'],
-                'discount' => $pricing['discount_percentage'],
+                'discount' => 0,
                 'total_price' => $pricing['total_price'],
                 'started_at' => $startedAt,
                 'expires_at' => $expiresAt,
@@ -132,7 +110,7 @@ class MembershipService
                 'package' => 'premium',
                 'type' => 'renewal',
                 'price' => $pricing['original_price'],
-                'discount' => $pricing['discount_percentage'],
+                'discount' => 0,
                 'total_price' => $pricing['total_price'],
                 'started_at' => $startedAt,
                 'expires_at' => $expiresAt,
@@ -176,15 +154,8 @@ class MembershipService
 
             $user->update($updateData);
 
-            // Add points and update level atomically
-            $oldPoints = $user->points;
-            $newPoints = $oldPoints + self::PREMIUM_POINTS_REWARD;
-            $newLevel = $this->calculateLevelFromPoints($newPoints);
-
-            $user->update([
-                'points' => $newPoints,
-                'membership_level' => $newLevel,
-            ]);
+            // Add points reward
+            $user->increment('points', self::PREMIUM_POINTS_REWARD);
 
             // Create point transaction record
             $user->pointTransactions()->create([
@@ -194,6 +165,22 @@ class MembershipService
             ]);
 
             DB::commit();
+
+            // Send notification email
+            if ($user && $user->email) {
+                try {
+                    $frontendUrl = rtrim(config('app.frontend_url', config('app.url')), '/');
+                    $formattedExpiry = $transaction->expires_at ? \Carbon\Carbon::parse($transaction->expires_at)->translatedFormat('d F Y') : null;
+                    \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\PackageUpgradedMail(
+                        user: $user,
+                        packageName: ucfirst($transaction->package ?? 'Premium'),
+                        expiresAt: $formattedExpiry,
+                        dashboardUrl: $actionUrl
+                    ));
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning('Gagal kirim email PackageUpgradedMail in MembershipService: ' . $e->getMessage());
+                }
+            }
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;
@@ -227,12 +214,27 @@ class MembershipService
     {
         $expiredCount = 0;
 
-        $expiredUsers = User::where('package', 'premium')
+        $expiredUsers = User::whereIn('package', ['premium', 'platinum', 'ekonomis', 'eksklusif', 'ekslusif', 'esklusif'])
+            ->whereNotNull('premium_expires_at')
             ->where('premium_expires_at', '<', Carbon::now())
             ->get();
 
+        $freePackage = Package::where('slug', 'biasa')->orWhere('price', 0)->first();
+
         foreach ($expiredUsers as $user) {
-            $user->update(['package' => 'free']);
+            $user->update([
+                'package' => 'free',
+                'membership_level' => 'basic',
+            ]);
+
+            if ($user->expert) {
+                $user->expert->update([
+                    'package_id' => $freePackage ? $freePackage->id : null,
+                    'is_premium' => false,
+                    'featured' => false,
+                ]);
+            }
+
             $expiredCount++;
         }
 
@@ -274,6 +276,7 @@ class MembershipService
         return $transactions->map(function ($transaction) {
             return [
                 'id' => $transaction->id,
+                'reference_code' => $transaction->reference_code,
                 'package' => $transaction->package,
                 'type' => $transaction->type,
                 'formatted_type' => $transaction->formatted_type,
@@ -284,6 +287,7 @@ class MembershipService
                 'started_at' => $transaction->started_at,
                 'expires_at' => $transaction->expires_at,
                 'payment_status' => $transaction->payment_status,
+                'payment_method' => 'Membership Transaction', // Add payment_method for frontend compatibility
                 'is_active' => $transaction->is_active,
                 'remaining_days' => $transaction->remaining_days,
                 'created_at' => $transaction->created_at,
@@ -299,10 +303,10 @@ class MembershipService
         return [
             'total_users' => User::count(),
             'free_users' => User::where('package', 'free')->count(),
-            'premium_users' => User::where('package', 'premium')
+            'premium_users' => User::whereIn('package', ['premium', 'platinum', 'ekonomis', 'eksklusif', 'ekslusif'])
                 ->where('premium_expires_at', '>', Carbon::now())
                 ->count(),
-            'expired_premium_users' => User::where('package', 'premium')
+            'expired_premium_users' => User::whereIn('package', ['premium', 'platinum', 'ekonomis', 'eksklusif', 'ekslusif'])
                 ->where('premium_expires_at', '<=', Carbon::now())
                 ->count(),
             'total_premium_revenue' => MembershipTransaction::where('payment_status', 'paid')->sum('total_price'),
@@ -310,11 +314,10 @@ class MembershipService
                 ->whereMonth('created_at', Carbon::now()->month)
                 ->whereYear('created_at', Carbon::now()->year)
                 ->sum('total_price'),
-            'level_distribution' => [
-                'basic' => User::where('membership_level', 'basic')->count(),
-                'silver' => User::where('membership_level', 'silver')->count(),
-                'gold' => User::where('membership_level', 'gold')->count(),
-                'platinum' => User::where('membership_level', 'platinum')->count(),
+            'package_distribution' => [
+                'free'     => User::where('package', 'free')->count(),
+                'ekonomis' => User::whereIn('package', ['ekonomis', 'premium'])->count(),
+                'ekslusif' => User::whereIn('package', ['ekslusif', 'eksklusif', 'platinum'])->count(),
             ],
         ];
     }

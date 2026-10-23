@@ -69,19 +69,24 @@ export default function EducationSection({ items, onChange }) {
       {error && <p className="bg-error-container text-on-error-container text-sm rounded-lg p-3 mb-3">{error}</p>}
 
       <form onSubmit={handleAdd} className="grid grid-cols-2 gap-3">
-        <select
+        <input
+          list="section-jenjang-options"
           required
+          placeholder="Jenjang (cth. S1, S2, S3, D3, Profesi)"
           value={form.jenjang}
           onChange={(e) => setForm({ ...form, jenjang: e.target.value })}
           className="col-span-1 border border-outline-variant/40 rounded-lg px-3 py-2 text-sm focus:ring-[#2E5E3B] focus:border-[#2E5E3B] bg-white"
-        >
-          <option value="">Jenjang</option>
-          <option value="SMA/SMK">SMA/SMK</option>
-          <option value="D3 · Diploma">D3 · Diploma</option>
-          <option value="S1 · Sarjana">S1 · Sarjana</option>
-          <option value="S2 · Magister">S2 · Magister</option>
-          <option value="S3 · Doktor">S3 · Doktor</option>
-        </select>
+        />
+        <datalist id="section-jenjang-options">
+          <option value="S1 · Sarjana" />
+          <option value="S2 · Magister" />
+          <option value="S3 · Doktor" />
+          <option value="D3 · Diploma" />
+          <option value="D4 · Sarjana Terapan" />
+          <option value="Profesi" />
+          <option value="Spesialis" />
+          <option value="SMA/SMK" />
+        </datalist>
         <input
           type="number"
           placeholder="Tahun lulus"

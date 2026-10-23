@@ -63,8 +63,8 @@ class MembershipController extends Controller
 
             if ($package) {
                 if ($package === 'expired') {
-                    // Special filter for expired premium
-                    $query->where('package', 'premium')
+                    // Special filter for expired premium/ekonomis/ekslusif
+                    $query->whereIn('package', ['premium', 'platinum', 'ekonomis', 'eksklusif', 'ekslusif', 'esklusif'])
                           ->where('premium_expires_at', '<=', now());
                 } else {
                     $query->where('package', $package);
@@ -86,9 +86,9 @@ class MembershipController extends Controller
                     $user->save();
                 }
 
-                // Check if premium should be expired
+                // Check if paid package should be expired
                 $isPremium = $user->isPremium();
-                if ($user->package === 'premium' && !$isPremium) {
+                if (in_array($user->package, ['premium', 'platinum', 'ekonomis', 'eksklusif', 'ekslusif', 'esklusif']) && !$isPremium) {
                     $user->package = 'free';
                     $user->save();
                 }

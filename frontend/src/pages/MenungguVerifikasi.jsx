@@ -107,8 +107,8 @@ export default function MenungguVerifikasi() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-6 py-12">
       <div className="w-full max-w-md text-center">
-        <Link to="/" className="font-headline-md text-xl font-bold text-[#0284C7] block mb-10">
-          TenagaAhli<span className="text-[#7DD3FC]">.com</span>
+        <Link to="/" className="font-headline-md text-xl font-bold text-[#6B3410] block mb-10">
+          TenagaAhli<span className="text-[#C89368]">.com</span>
         </Link>
 
         {/* ═══════════════════════════════════════════════════════ */}
@@ -116,15 +116,15 @@ export default function MenungguVerifikasi() {
         {/* ═══════════════════════════════════════════════════════ */}
         {status === 'pending' && (
           <div className="animate-fadeIn">
-            <div className="w-24 h-24 bg-[#E0F2FE] rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="material-symbols-outlined text-5xl text-[#0284C7]">hourglass_top</span>
+            <div className="w-24 h-24 bg-[#F5EBE1] rounded-full flex items-center justify-center mx-auto mb-6">
+              <span className="material-symbols-outlined text-5xl text-[#6B3410]">hourglass_top</span>
             </div>
             <h1 className="text-2xl font-bold text-on-background mb-2">Menunggu Verifikasi Admin</h1>
 
             <p className="text-sm text-on-surface-variant leading-relaxed mb-1">
               Pendaftaran Anda dengan email
             </p>
-            <p className="text-sm font-bold text-[#0284C7] mb-4">{email}</p>
+            <p className="text-sm font-bold text-[#6B3410] mb-4">{email}</p>
 
             <p className="text-sm text-on-surface-variant leading-relaxed mb-6">
               sedang ditinjau oleh tim TenagaAhli.com. Proses verifikasi biasanya memakan waktu{' '}
@@ -132,8 +132,8 @@ export default function MenungguVerifikasi() {
             </p>
 
             {/* Info email otomatis */}
-            <div className="bg-[#E0F2FE] border border-[#0EA5E9]/30 rounded-xl p-4 mb-6 flex gap-3 text-left">
-              <span className="material-symbols-outlined text-[#0284C7] text-[20px] shrink-0 mt-0.5">mark_email_read</span>
+            <div className="bg-[#F5EBE1] border border-[#8B4513]/30 rounded-xl p-4 mb-6 flex gap-3 text-left">
+              <span className="material-symbols-outlined text-[#6B3410] text-[20px] shrink-0 mt-0.5">mark_email_read</span>
               <div className="text-sm text-[#075985] leading-relaxed">
                 <p className="font-semibold mb-1">Notifikasi via Email</p>
                 <p>
@@ -155,7 +155,7 @@ export default function MenungguVerifikasi() {
               type="button"
               onClick={handleCekStatus}
               disabled={checking}
-              className="w-full bg-[#0EA5E9] text-white py-3 rounded-lg text-sm font-bold hover:bg-[#0284C7] active:scale-[0.99] transition-all disabled:opacity-60 flex items-center justify-center gap-2 mb-3"
+              className="w-full bg-[#8B4513] text-white py-3 rounded-lg text-sm font-bold hover:bg-[#6B3410] active:scale-[0.99] transition-all disabled:opacity-60 flex items-center justify-center gap-2 mb-3"
             >
               {checking ? (
                 <>
@@ -208,8 +208,8 @@ export default function MenungguVerifikasi() {
               </div>
             </div>
 
-            <div className="bg-[#E0F2FE] border border-[#0EA5E9]/30 rounded-xl p-4 mb-6 flex gap-3 text-left">
-              <span className="material-symbols-outlined text-[#0284C7] text-[20px] shrink-0 mt-0.5 animate-spin">sync</span>
+            <div className="bg-[#F5EBE1] border border-[#8B4513]/30 rounded-xl p-4 mb-6 flex gap-3 text-left">
+              <span className="material-symbols-outlined text-[#6B3410] text-[20px] shrink-0 mt-0.5 animate-spin">sync</span>
               <div className="text-sm text-[#075985] leading-relaxed">
                 <p className="font-semibold">Mengarahkan ke halaman login...</p>
               </div>
@@ -217,7 +217,7 @@ export default function MenungguVerifikasi() {
 
             <Link
               to="/sign-in"
-              className="w-full inline-block bg-[#0EA5E9] text-white py-3 rounded-lg text-sm font-bold hover:bg-[#0284C7] active:scale-[0.99] transition-all text-center"
+              className="w-full inline-block bg-[#8B4513] text-white py-3 rounded-lg text-sm font-bold hover:bg-[#6B3410] active:scale-[0.99] transition-all text-center"
             >
               Masuk Sekarang
             </Link>
@@ -262,7 +262,7 @@ export default function MenungguVerifikasi() {
             <button
               type="button"
               onClick={handleDaftarUlang}
-              className="w-full bg-[#0EA5E9] text-white py-3 rounded-lg text-sm font-bold hover:bg-[#0284C7] active:scale-[0.99] transition-all"
+              className="w-full bg-[#8B4513] text-white py-3 rounded-lg text-sm font-bold hover:bg-[#6B3410] active:scale-[0.99] transition-all"
             >
               Daftar Ulang
             </button>

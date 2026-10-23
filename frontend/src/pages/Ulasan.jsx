@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import DashboardLayout from '../components/DashboardLayout';
 import { useTranslation } from '../context/LanguageContext.jsx';
 import api from '../api/client.js';
+import { SkeletonUlasan } from '../components/Skeleton.jsx';
 
 function Card({ children, className = '' }) {
   return <div className={`bg-white rounded-2xl border border-black/5 shadow-sm ${className}`}>{children}</div>;
@@ -37,7 +38,7 @@ function formatDate(dateStr) {
 }
 
 function getAvatarColor(name) {
-  const colors = ['#0284C7', '#EA580C', '#7C3AED', '#059669', '#DC2626', '#D97706'];
+  const colors = ['#6B3410', '#EA580C', '#7C3AED', '#059669', '#DC2626', '#D97706'];
   const index = name.charCodeAt(0) % colors.length;
   return colors[index];
 }
@@ -107,6 +108,14 @@ export default function Ulasan() {
 
   const filteredReviews = filterRating === 0 ? reviews : reviews.filter((r) => r.rating === filterRating);
 
+  if (loading && reviews.length === 0) {
+    return (
+      <DashboardLayout title={t('Ulasan & Rating')} subtitle={t('Lihat feedback dan penilaian dari klien Anda.')}>
+        <SkeletonUlasan />
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout title={t('Ulasan & Rating')} subtitle={t('Lihat feedback dan penilaian dari klien Anda.')}>
       {error && (
@@ -119,30 +128,33 @@ export default function Ulasan() {
       <div className="space-y-5 animate-fadeIn">
         {/* Summary Row */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <Card className="p-12 text-center">
-              <div className="animate-spin rounded-full h-10 w-10 border-4 border-[#0284C7]/20 border-t-[#0284C7] mx-auto"></div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 animate-pulse">
+            <Card className="p-8 sm:p-12 text-center space-y-3">
+              <div className="h-10 bg-gray-200 rounded w-20 mx-auto" />
+              <div className="h-4 bg-gray-200 rounded w-28 mx-auto" />
             </Card>
-            <Card className="p-12 md:col-span-2 text-center">
-              <p className="text-sm text-[#414844]/60">Memuat data ulasan...</p>
+            <Card className="p-8 sm:p-12 md:col-span-2 space-y-3">
+              <div className="h-4 bg-gray-200 rounded w-36" />
+              <div className="h-3 bg-gray-100 rounded w-full" />
+              <div className="h-3 bg-gray-100 rounded w-5/6" />
             </Card>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <Card className="p-6 flex flex-col items-center justify-center text-center">
-              <p className="text-4xl font-black text-[#1F2A22] mb-1">{avgRating}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+            <Card className="p-4 sm:p-6 flex flex-col items-center justify-center text-center">
+              <p className="text-3xl sm:text-4xl font-black text-[#1F2A22] mb-1">{avgRating}</p>
               <StarRating rating={Math.round(avgRating)} size={22} />
               <p className="text-xs text-[#414844]/60 mt-2">{reviews.length} {t('ulasan total')}</p>
             </Card>
 
-            <Card className="p-6 md:col-span-2">
+            <Card className="p-4 sm:p-6 md:col-span-2">
               <h3 className="text-xs font-bold text-[#414844]/60 uppercase tracking-wider mb-3">{t('Distribusi Rating')}</h3>
               <div className="space-y-2">
                 {ratingDist.map((d) => (
                   <button
                     key={d.star}
                     onClick={() => setFilterRating(filterRating === d.star ? 0 : d.star)}
-                    className={`w-full flex items-center gap-3 py-1 rounded-lg transition-colors ${
+                    className={`w-full flex items-center gap-2.5 sm:gap-3 py-1 rounded-lg transition-colors ${
                       filterRating === d.star ? 'bg-[#FFF4D6]/60' : 'hover:bg-black/2'
                     }`}
                   >
@@ -166,13 +178,13 @@ export default function Ulasan() {
 
         {/* Filter pills */}
         {!loading && reviews.length > 0 && (
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-1.5 sm:gap-2 flex-wrap">
             <button
               onClick={() => setFilterRating(0)}
-              className={`px-4 py-2 rounded-full text-xs font-bold transition-colors ${
+              className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-colors ${
                 filterRating === 0
-                  ? 'bg-[#0284C7] text-white'
-                  : 'bg-[#0284C7]/5 text-[#414844] hover:bg-[#0284C7]/10'
+                  ? 'bg-[#6B3410] text-white'
+                  : 'bg-[#6B3410]/5 text-[#414844] hover:bg-[#6B3410]/10'
               }`}
             >
               {t('Semua')} ({reviews.length})
@@ -184,10 +196,10 @@ export default function Ulasan() {
                 <button
                   key={r}
                   onClick={() => setFilterRating(filterRating === r ? 0 : r)}
-                  className={`px-4 py-2 rounded-full text-xs font-bold transition-colors flex items-center gap-1 ${
+                  className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-colors flex items-center gap-1 ${
                     filterRating === r
-                      ? 'bg-[#0284C7] text-white'
-                      : 'bg-[#0284C7]/5 text-[#414844] hover:bg-[#0284C7]/10'
+                      ? 'bg-[#6B3410] text-white'
+                      : 'bg-[#6B3410]/5 text-[#414844] hover:bg-[#6B3410]/10'
                   }`}
                 >
                   {r} <span className="material-symbols-outlined text-[12px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span> ({cnt})
@@ -199,8 +211,8 @@ export default function Ulasan() {
 
         {/* Review Cards */}
         {!loading && filteredReviews.length === 0 ? (
-          <Card className="p-12 text-center">
-            <span className="material-symbols-outlined text-[56px] text-[#F59E0B]/20 mb-3 block">star</span>
+          <Card className="p-8 sm:p-12 text-center">
+            <span className="material-symbols-outlined text-[48px] sm:text-[56px] text-[#F59E0B]/20 mb-3 block">star</span>
             <h3 className="text-base font-bold text-[#1F2A22] mb-1">{t('Tidak ada ulasan')}</h3>
             <p className="text-sm text-[#414844]/60">
               {filterRating > 0
@@ -209,17 +221,17 @@ export default function Ulasan() {
             </p>
           </Card>
         ) : !loading ? (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {filteredReviews.map((review) => {
               const avatarColor = getAvatarColor(review.nama);
               const avatarInitial = review.nama?.charAt(0).toUpperCase() || '?';
               const showReplyForm = !review.balasan;
 
               return (
-                <Card key={review.id} className="p-6">
-                  <div className="flex items-start gap-4">
+                <Card key={review.id} className="p-4 sm:p-6">
+                  <div className="flex items-start gap-3 sm:gap-4">
                     <div
-                      className="w-11 h-11 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0"
+                      className="w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm shrink-0"
                       style={{ backgroundColor: avatarColor }}
                     >
                       {avatarInitial}
@@ -229,13 +241,13 @@ export default function Ulasan() {
                         <h4 className="font-bold text-sm text-[#1F2A22]">{review.nama}</h4>
                         <span className="text-[10px] text-[#414844]/50">{formatDate(review.tanggal)}</span>
                       </div>
-                      <StarRating rating={review.rating} size={16} />
-                      <p className="text-sm text-[#414844] leading-relaxed mt-3">{review.komentar}</p>
+                      <StarRating rating={review.rating} size={15} />
+                      <p className="text-xs sm:text-sm text-[#414844] leading-relaxed mt-2 sm:mt-3">{review.komentar}</p>
 
                       {review.balasan && (
                         <div className="mt-3 bg-[#F5F4EF] rounded-xl p-3 border border-black/5">
                           <div className="flex items-center justify-between mb-1">
-                            <p className="text-[10px] font-bold text-[#0284C7] uppercase tracking-wider flex items-center gap-1">
+                            <p className="text-[10px] font-bold text-[#6B3410] uppercase tracking-wider flex items-center gap-1">
                               <span className="material-symbols-outlined text-[12px]">reply</span>
                               {t('Balasan Anda')}
                             </p>
@@ -267,12 +279,12 @@ export default function Ulasan() {
                               value={replyText[review.id] || ''}
                               onChange={(e) => setReplyText((prev) => ({ ...prev, [review.id]: e.target.value }))}
                               placeholder={t('Tulis balasan Anda...')}
-                              className="flex-1 rounded-lg border border-black/10 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#0284C7]/30 focus:border-[#0284C7] transition-all resize-none"
+                              className="flex-1 rounded-lg border border-black/10 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#6B3410]/30 focus:border-[#6B3410] transition-all resize-none"
                             />
                             <button
                               onClick={() => handleReply(review.id)}
                               disabled={sendingReply[review.id] || !(replyText[review.id] || '').trim()}
-                              className="bg-[#0284C7] text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-[#0369A1] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md shadow-[#0284C7]/15 h-fit flex items-center gap-1"
+                              className="bg-[#6B3410] text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-[#55290A] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md shadow-[#6B3410]/15 h-fit flex items-center gap-1"
                             >
                               {sendingReply[review.id] ? (
                                 <>
