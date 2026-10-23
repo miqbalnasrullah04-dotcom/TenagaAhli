@@ -167,7 +167,12 @@ class MembershipMedalService
         $package = $expert->package;
         $pkgName = strtolower(optional($package)->name ?? '');
         $pkgSlug = strtolower(optional($package)->slug ?? '');
-        $userPkg = strtolower(optional($expert->user)->package ?? '');
+        $userPkg = '';
+        if ($expert->relationLoaded('user') && $expert->user) {
+            $userPkg = strtolower($expert->user->package ?? '');
+        } elseif ($expert->user_id) {
+            $userPkg = strtolower(\App\Models\User::where('id', $expert->user_id)->value('package') ?? '');
+        }
 
         $isPaid = (optional($package)->price > 0)
             || str_contains($pkgName, 'ekonomis')

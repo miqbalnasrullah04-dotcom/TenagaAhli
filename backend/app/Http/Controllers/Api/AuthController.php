@@ -326,7 +326,7 @@ class AuthController extends Controller
         }
 
         return response()->json([
-            'user'  => array_merge($user->toArray(), [
+            'user'  => array_merge($user->withoutRelations()->toArray(), [
                 'role_type'  => $user->role_type ?? 'klien',
                 'is_online'  => true,
                 'foto'       => $user->foto ?: $expertPhoto,

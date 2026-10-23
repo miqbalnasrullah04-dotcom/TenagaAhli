@@ -50,6 +50,14 @@ class Expert extends Model
         'photo_url',
     ];
 
+    /**
+     * Sembunyikan relasi user saat Expert diserialisasi menjadi array/JSON
+     * untuk mencegah infinite recursion (User -> Expert -> User -> Expert).
+     */
+    protected $hidden = [
+        'user',
+    ];
+
     public function getPhotoUrlAttribute(): ?string
     {
         if (!$this->photo) {
